@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AWS Architecture Viewer</title>
+    <title>juanpablo.xyz</title>
+    <!-- Prevent flash of wrong theme before CSS loads -->
+    <script>
+      try {
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+      } catch(e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
