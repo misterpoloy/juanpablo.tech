@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { getTalk } from "../talks/registry.js";
 import { useIsDesktop } from "../components/ProjectUI.jsx";
@@ -40,11 +41,115 @@ function SocialLink({ href, label, icon }) {
   );
 }
 
+function ImageLightbox({ images, activeIndex, onClose, title }) {
+  useEffect(() => {
+    if (activeIndex === null) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeIndex, onClose]);
+
+  if (activeIndex === null) return null;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 2000,
+        background: "rgba(5, 8, 12, 0.88)",
+        backdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
+      }}
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        style={{
+          position: "absolute",
+          top: 16,
+          right: 16,
+          width: 40,
+          height: 40,
+          borderRadius: 999,
+          border: "1px solid var(--line2)",
+          background: "var(--surface2)",
+          color: "var(--ink1)",
+          fontSize: 22,
+          cursor: "pointer",
+          fontFamily: "monospace",
+        }}
+      >
+        ×
+      </button>
+
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: "min(1200px, 100%)",
+          maxHeight: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+        }}
+      >
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+          color: "var(--ink2)",
+          fontSize: 12,
+          fontFamily: "monospace",
+        }}>
+          <span>{title} preview</span>
+          <span>{activeIndex + 1} / {images.length}</span>
+        </div>
+
+        <div style={{
+          borderRadius: 16,
+          overflow: "hidden",
+          border: "1px solid var(--line)",
+          background: "rgba(12, 17, 24, 0.95)",
+          boxShadow: "0 20px 80px rgba(0, 0, 0, 0.45)",
+        }}>
+          <img
+            src={images[activeIndex]}
+            alt={`${title} image ${activeIndex + 1}`}
+            style={{
+              width: "100%",
+              maxHeight: "calc(100vh - 120px)",
+              objectFit: "contain",
+              display: "block",
+              background: "var(--bg)",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Page ────────────────────────────────────────────────────────────────── */
 export default function TalkDetail() {
   const { talkId } = useParams();
   const t = getTalk(talkId);
   const isDesktop = useIsDesktop();
+  const [activeImageIndex, setActiveImageIndex] = useState(null);
 
   if (!t) return <Navigate to="/talks" replace />;
 
@@ -52,6 +157,7 @@ export default function TalkDetail() {
   const statusColor = isDelivered ? "#3fb950" : "#D97706";
   const primaryLink = t.videoUrl || t.conferenceUrl;
   const primaryLinkLabel = t.externalLabel || "Open link";
+  const galleryImages = [t.featureImage, ...(t.eventImages ?? [])].filter(Boolean);
   const heroMeta = [
     t.date ? { icon: "📅", text: t.date } : null,
     t.time ? { icon: "🕐", text: t.time } : null,
@@ -188,16 +294,30 @@ export default function TalkDetail() {
                 borderRadius: 14,
                 overflow: "hidden",
               }}>
-                <img
-                  src={t.featureImage}
-                  alt={`${t.conference} ${t.edition} feature`}
+                <button
+                  type="button"
+                  onClick={() => setActiveImageIndex(0)}
                   style={{
+                    border: "none",
+                    padding: 0,
+                    margin: 0,
+                    background: "transparent",
+                    cursor: "zoom-in",
                     width: "100%",
-                    display: "block",
-                    objectFit: "cover",
-                    maxHeight: isDesktop ? 420 : 280,
+                    textAlign: "left",
                   }}
-                />
+                >
+                  <img
+                    src={t.featureImage}
+                    alt={`${t.conference} ${t.edition} feature`}
+                    style={{
+                      width: "100%",
+                      display: "block",
+                      objectFit: "cover",
+                      maxHeight: isDesktop ? 420 : 280,
+                    }}
+                  />
+                </button>
               </div>
             )}
 
@@ -219,17 +339,30 @@ export default function TalkDetail() {
                   background: "var(--bg)",
                 }}>
                   {t.eventImages.map((src, index) => (
-                    <img
+                    <button
                       key={src}
-                      src={src}
-                      alt={`${t.conference} ${t.edition} gallery ${index + 1}`}
                       style={{
-                        width: "100%",
-                        height: isDesktop ? 220 : "auto",
-                        display: "block",
-                        objectFit: "cover",
+                        border: "none",
+                        padding: 0,
+                        margin: 0,
+                        background: "transparent",
+                        cursor: "zoom-in",
+                        textAlign: "left",
                       }}
-                    />
+                      type="button"
+                      onClick={() => setActiveImageIndex((t.featureImage ? 1 : 0) + index)}
+                    >
+                      <img
+                        src={src}
+                        alt={`${t.conference} ${t.edition} gallery ${index + 1}`}
+                        style={{
+                          width: "100%",
+                          height: isDesktop ? 220 : "auto",
+                          display: "block",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </button>
                   ))}
                 </div>
               </div>
@@ -389,6 +522,13 @@ export default function TalkDetail() {
           </div>
         </div>
       </Container>
+
+      <ImageLightbox
+        images={galleryImages}
+        activeIndex={activeImageIndex}
+        onClose={() => setActiveImageIndex(null)}
+        title={`${t.conference} ${t.edition}`}
+      />
     </main>
   );
 }

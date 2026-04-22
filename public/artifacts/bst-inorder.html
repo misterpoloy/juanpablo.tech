@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BST Inorder Traversal</title>
+<style>
+  :root {
+    --bg:       #0d1117;
+    --surface:  #161b22;
+    --surface2: #1c232b;
+    --line:     #21262d;
+    --line2:    #30363d;
+    --ink1:     #e6edf3;
+    --ink2:     #c9d1d9;
+    --ink3:     #8b949e;
+    --ink4:     #6b7280;
+    --ink5:     #484f58;
+    --accent:   #58a6ff;
+    --tint:     #1f6feb33;
+    --tintb:    #1f6feb;
+    --ok:       #3fb950;
+    --ok-tint:  rgba(63, 185, 80, 0.14);
+    --warn:     #d29922;
+    --warn-tint: rgba(210, 153, 34, 0.14);
+    --hot:      #f78166;
+    --hot-tint: rgba(247, 129, 102, 0.18);
+    --code-bg:  #010409;
+    --code-panel: #0d1117;
+    --code-line: #161b22;
+    --code-ink: #c9d1d9;
+    --code-dim: #484f58;
+  }
+
+  [data-theme="light"] {
+    --bg:       #ffffff;
+    --surface:  #f6f8fa;
+    --surface2: #eaeef2;
+    --line:     #d0d7de;
+    --line2:    #afb8c1;
+    --ink1:     #1f2328;
+    --ink2:     #24292f;
+    --ink3:     #57606a;
+    --ink4:     #6e7781;
+    --ink5:     #8c959f;
+    --accent:   #0969da;
+    --tint:     #ddf4ff;
+    --tintb:    #0969da;
+    --ok:       #1a7f37;
+    --ok-tint:  rgba(45, 164, 78, 0.14);
+    --warn:     #9a6700;
+    --warn-tint: rgba(191, 135, 0, 0.16);
+    --hot:      #cf222e;
+    --hot-tint: rgba(207, 34, 46, 0.12);
+    --code-bg:  #0d1117;
+    --code-panel: #161b22;
+    --code-line: #21262d;
+    --code-ink: #c9d1d9;
+    --code-dim: #484f58;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink2);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  header {
+    padding: 32px 40px 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .header-left h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--ink1);
+  }
+
+  .header-left h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .header-left p {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ink4);
+    letter-spacing: 0.5px;
+  }
+
+  .tree-select-wrap { display: grid; gap: 8px; }
+
+  .tree-select-label {
+    font-size: 10px;
+    color: var(--ink4);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .tree-select {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tree-btn {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink3);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+    letter-spacing: 0.3px;
+  }
+
+  .tree-btn:hover {
+    color: var(--ink1);
+    border-color: var(--line2);
+  }
+
+  .tree-btn.active {
+    color: var(--accent);
+    background: var(--tint);
+    border-color: var(--tintb);
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* PANEL */
+  .panel {
+    padding: 28px 32px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .panel:last-child { border-right: none; }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .panel-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+  }
+
+  .tag-rec       { color: var(--accent); }
+  .tag-iter      { color: var(--ink4); }
+  .tag-bfs-rec   { color: var(--ink4); }
+  .tag-bfs-iter  { color: var(--accent); }
+
+  .panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink1);
+  }
+
+  /* TREE CANVAS */
+  .tree-wrap {
+    background: var(--code-panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 220px;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border: 1px solid var(--tintb);
+    background: var(--tint);
+    color: var(--accent);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn:hover { filter: brightness(1.15); }
+
+  .btn.outline {
+    background: var(--surface);
+    border-color: var(--line);
+    color: var(--ink3);
+  }
+  .btn.outline:hover {
+    border-color: var(--line2);
+    color: var(--ink1);
+  }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .speed-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--ink4);
+  }
+
+  input[type=range] {
+    width: 80px;
+    accent-color: var(--accent);
+  }
+
+  /* STATE DISPLAY */
+  .state-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .state-box {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .state-label {
+    font-size: 10px;
+    color: var(--ink4);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .state-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink1);
+    min-height: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid transparent;
+  }
+
+  .chip-stack   { background: var(--tint);      color: var(--accent); border-color: var(--tintb); }
+  .chip-visited { background: var(--ok-tint);   color: var(--ok);     border-color: var(--ok); }
+  .chip-current { background: var(--hot-tint);  color: var(--hot);    border-color: var(--hot); }
+  .chip-queue   { background: var(--warn-tint); color: var(--warn);   border-color: var(--warn); }
+
+  /* OUTPUT */
+  .output-box {
+    background: var(--code-panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+
+  .output-label {
+    font-size: 10px;
+    color: var(--ink4);
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .output-vals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    min-height: 26px;
+  }
+
+  .out-num {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink1);
+    animation: popIn 0.2s ease;
+  }
+
+  .out-arrow {
+    font-size: 13px;
+    color: var(--ink5);
+    align-self: center;
+  }
+
+  /* CALL STACK VISUAL (recursive) */
+  .callstack-wrap { margin-bottom: 14px; }
+
+  .cs-label {
+    font-size: 10px;
+    color: var(--ink4);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .cs-frames {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+    min-height: 46px;
+  }
+
+  .cs-frame {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--tint);
+    border: 1px solid var(--tintb);
+    border-radius: 8px;
+    padding: 5px 10px;
+    color: var(--accent);
+    animation: slideIn 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    opacity: 0.65;
+  }
+
+  .cs-frame.top {
+    opacity: 1;
+    background: var(--hot-tint);
+    border-color: var(--hot);
+    color: var(--hot);
+  }
+
+  /* CODE EDITOR */
+  .code-editor {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    margin-bottom: 14px;
+    background: var(--code-bg);
+  }
+
+  .editor-titlebar {
+    background: var(--code-panel);
+    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--code-line);
+  }
+
+  .editor-dots { display: flex; gap: 6px; }
+  .editor-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--code-line); }
+
+  .editor-filename {
+    font-size: 11px;
+    color: var(--ink3);
+    flex: 1;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  .editor-lang {
+    font-size: 10px;
+    color: var(--ink4);
+    letter-spacing: 1.2px;
+    font-weight: 700;
+  }
+
+  .editor-body { display: flex; overflow-x: auto; background: var(--code-bg); }
+
+  .editor-lines {
+    padding: 14px 12px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--code-dim);
+    text-align: right;
+    user-select: none;
+    border-right: 1px solid var(--code-line);
+    min-width: 36px;
+    background: var(--code-panel);
+  }
+
+  .editor-code {
+    padding: 14px 18px;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--code-ink);
+    white-space: pre;
+    flex: 1;
+    margin: 0;
+  }
+
+  .editor-code .kw   { color: #ff7b72; }
+  .editor-code .type { color: #79c0ff; }
+  .editor-code .fn   { color: #d2a8ff; }
+  .editor-code .cm   { color: #8b949e; font-style: italic; }
+  .editor-code .str  { color: #a5d6ff; }
+
+  /* COMPLEXITY */
+  .complexity {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .cx-box {
+    flex: 1 1 100px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  .cx-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink1);
+  }
+
+  .cx-label {
+    font-size: 10px;
+    color: var(--ink4);
+    margin-top: 3px;
+    letter-spacing: 0.8px;
+  }
+
+  /* BEST PICK BADGE */
+  .best-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .best-badge.pick-yes {
+    background: var(--ok-tint);
+    color: var(--ok);
+    border: 1px solid var(--ok);
+  }
+
+  .best-badge.pick-no {
+    background: var(--surface);
+    color: var(--ink4);
+    border: 1px solid var(--line);
+    font-weight: 600;
+  }
+
+  .best-badge .badge-star { font-size: 11px; }
+
+  /* BFS SECTION */
+  .bfs-section {
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+
+  .bfs-header {
+    padding: 40px 40px 32px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .bfs-eyebrow {
+    font-size: 10px;
+    color: var(--ink4);
+    letter-spacing: 1.8px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .bfs-title {
+    font-size: clamp(22px, 3.6vw, 32px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--ink1);
+  }
+
+  .bfs-title em {
+    font-style: normal;
+    color: var(--warn);
+  }
+
+  .bfs-desc {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--ink3);
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  .bfs-desc strong { color: var(--ink1); font-weight: 700; }
+
+  .bfs-contrast {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 18px;
+    min-width: 280px;
+  }
+
+  .contrast-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 6px 0;
+  }
+
+  .contrast-label {
+    font-size: 11px;
+    color: var(--ink4);
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+
+  .contrast-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 170px;
+    justify-content: flex-end;
+  }
+
+  .contrast-val.accent-bfs { color: var(--warn); }
+
+  .contrast-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 4px 0;
+  }
+
+  .bfs-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bfs-panel {
+    border-right: 1px solid var(--line);
+    padding: 28px 32px;
+  }
+
+  .bfs-panel:last-child { border-right: none; }
+
+  .bfs-concept-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 40px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    flex-wrap: wrap;
+  }
+
+  .concept-card {
+    flex: 1 1 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .concept-card.active-concept {
+    border-color: var(--warn);
+    background: var(--warn-tint);
+  }
+
+  .concept-icon {
+    font-size: 18px;
+    line-height: 1;
+    color: var(--ink3);
+  }
+
+  .concept-card.active-concept .concept-icon { color: var(--warn); }
+
+  .concept-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ink1);
+  }
+
+  .concept-detail {
+    font-size: 10px;
+    color: var(--ink4);
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+  }
+
+  .concept-vs {
+    font-size: 11px;
+    color: var(--ink4);
+    font-weight: 700;
+    padding: 0 4px;
+    letter-spacing: 1px;
+  }
+
+  /* LEVEL BANDS */
+  .level-bands {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+    min-height: 40px;
+  }
+
+  .level-band {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .level-label {
+    font-size: 10px;
+    color: var(--ink4);
+    letter-spacing: 1px;
+    min-width: 40px;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .level-nodes {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .level-chip {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .level-chip.pending { background: var(--surface);    color: var(--ink4); border-color: var(--line); }
+  .level-chip.active  { background: var(--warn-tint);  color: var(--warn); border-color: var(--warn); }
+  .level-chip.done    { background: var(--ok-tint);    color: var(--ok);   border-color: var(--ok); }
+
+  /* BFS NOTE */
+  .bfs-note {
+    display: flex;
+    gap: 10px;
+    background: var(--hot-tint);
+    border: 1px solid var(--hot);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 10px 0;
+    font-size: 12px;
+    color: var(--ink3);
+    line-height: 1.6;
+  }
+
+  .note-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; color: var(--hot); }
+  .bfs-note em { font-style: normal; color: var(--ink1); font-weight: 700; }
+
+  /* INSIGHT GRID */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .insight-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+
+  .insight-card:hover { border-color: var(--accent); }
+
+  .insight-num {
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 1.8px;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .insight-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink1);
+    margin-bottom: 6px;
+  }
+
+  .insight-body {
+    font-size: 12px;
+    color: var(--ink3);
+    line-height: 1.6;
+  }
+
+  .insight-body code {
+    font-family: inherit;
+    font-size: 11px;
+    background: var(--code-panel);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+    border: 1px solid var(--line);
+  }
+
+  /* ANIMATIONS */
+  @keyframes popIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  @keyframes slideIn {
+    from { transform: translateY(-6px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .panel { border-right: none; }
+    .bfs-body { grid-template-columns: 1fr; }
+    .bfs-panel { border-right: none; border-bottom: 1px solid var(--line); }
+    .bfs-concept-bar { flex-wrap: wrap; padding: 14px 20px; }
+    .bfs-header { padding: 28px 20px; }
+    header { padding: 24px 20px; }
+    .panel { padding: 24px 20px; }
+    .bfs-panel { padding: 24px 20px; }
+    .insight-grid { grid-template-columns: 1fr; }
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 3px; }
+</style>
+<script>
+  // Apply theme from query string (?theme=dark|light) before body renders
+  (function () {
+    try {
+      var q = new URLSearchParams(window.location.search).get('theme');
+      if (q === 'light' || q === 'dark') {
+        document.documentElement.setAttribute('data-theme', q);
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Inorder <em>DFS</em><br>Tree Traversal</h1>
+    <p>// recursive vs iterative — TypeScript implementation</p>
+  </div>
+  <div class="tree-select-wrap">
+    <div class="tree-select-label">Select Tree</div>
+    <div class="tree-select">
+      <button class="tree-btn active" onclick="selectTree(0)">Balanced</button>
+      <button class="tree-btn" onclick="selectTree(1)">Skewed Left</button>
+      <button class="tree-btn" onclick="selectTree(2)">Skewed Right</button>
+      <button class="tree-btn" onclick="selectTree(3)">Complex</button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- RECURSIVE PANEL -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-tag tag-rec">Recursive</span>
+      <span class="panel-title">Call Stack Approach</span>
+      <span class="best-badge pick-yes"><span class="badge-star">★</span> pick this for DFS</span>
+    </div>
+
+    <div class="tree-wrap">
+      <canvas id="canvasRec" height="220"></canvas>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="btnRecPlay" onclick="playRec()">▶ Play</button>
+      <button class="btn outline" onclick="resetRec()">↺ Reset</button>
+      <button class="btn outline" onclick="stepRec()">Step →</button>
+      <div class="speed-wrap">
+        speed <input type="range" id="speedRec" min="1" max="5" value="3">
+      </div>
+    </div>
+
+    <div class="callstack-wrap">
+      <div class="cs-label">// call stack (OS manages this)</div>
+      <div class="cs-frames" id="callStack"></div>
+    </div>
+
+    <div class="state-row">
+      <div class="state-box">
+        <div class="state-label">current node</div>
+        <div class="state-val" id="recCurrent"><span style="color:var(--ink4)">—</span></div>
+      </div>
+      <div class="state-box">
+        <div class="state-label">visited (inorder)</div>
+        <div class="state-val" id="recVisited"></div>
+      </div>
+    </div>
+
+    <div class="output-box">
+      <div class="output-label">// inorder output</div>
+      <div class="output-vals" id="recOutput"></div>
+    </div>
+
+    <div class="code-editor">
+      <div class="editor-titlebar">
+        <div class="editor-dots"><span></span><span></span><span></span></div>
+        <div class="editor-filename">inorder-recursive.ts</div>
+        <div class="editor-lang">TypeScript</div>
+      </div>
+      <div class="editor-body">
+        <div class="editor-lines" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21</div>
+        <pre class="editor-code"><span class="cm">// TypeScript — Recursive</span>
+<span class="kw">interface</span> <span class="type">TreeNode</span> {
+  val:   <span class="type">number</span>;
+  left:  <span class="type">TreeNode</span> | <span class="type">null</span>;
+  right: <span class="type">TreeNode</span> | <span class="type">null</span>;
+}
+
+<span class="kw">function</span> <span class="fn">inorderRecursive</span>(
+  node:   <span class="type">TreeNode</span> | <span class="type">null</span>,
+  result: <span class="type">number</span>[] = []
+): <span class="type">number</span>[] {
+
+  <span class="kw">if</span> (node === <span class="type">null</span>) <span class="kw">return</span> result;
+
+  <span class="fn">inorderRecursive</span>(node.left,  result); <span class="cm">// ← go LEFT first</span>
+  result.<span class="fn">push</span>(node.val);                <span class="cm">// ← visit ROOT</span>
+  <span class="fn">inorderRecursive</span>(node.right, result); <span class="cm">// ← then RIGHT</span>
+
+  <span class="kw">return</span> result;
+}
+</pre>
+      </div>
+    </div>
+
+    <div class="complexity">
+      <div class="cx-box"><div class="cx-val">O(n)</div><div class="cx-label">Time</div></div>
+      <div class="cx-box"><div class="cx-val">O(h)</div><div class="cx-label">Space (call stack)</div></div>
+      <div class="cx-box"><div class="cx-val">h=log n</div><div class="cx-label">balanced tree</div></div>
+    </div>
+  </div>
+
+  <!-- ITERATIVE PANEL -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-tag tag-iter">Iterative</span>
+      <span class="panel-title">Explicit Stack Approach</span>
+      <span class="best-badge pick-no">good to know</span>
+    </div>
+
+    <div class="tree-wrap">
+      <canvas id="canvasIter" height="220"></canvas>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="btnIterPlay" onclick="playIter()">▶ Play</button>
+      <button class="btn outline" onclick="resetIter()">↺ Reset</button>
+      <button class="btn outline" onclick="stepIter()">Step →</button>
+      <div class="speed-wrap">
+        speed <input type="range" id="speedIter" min="1" max="5" value="3">
+      </div>
+    </div>
+
+    <div class="state-row">
+      <div class="state-box">
+        <div class="state-label">stack []</div>
+        <div class="state-val" id="iterStack"></div>
+      </div>
+      <div class="state-box">
+        <div class="state-label">current node</div>
+        <div class="state-val" id="iterCurrent"><span style="color:var(--ink4)">—</span></div>
+      </div>
+    </div>
+
+    <div class="output-box">
+      <div class="output-label">// inorder output</div>
+      <div class="output-vals" id="iterOutput"></div>
+    </div>
+
+    <div class="code-editor">
+      <div class="editor-titlebar">
+        <div class="editor-dots"><span></span><span></span><span></span></div>
+        <div class="editor-filename">inorder-iterative.ts</div>
+        <div class="editor-lang">TypeScript</div>
+      </div>
+      <div class="editor-body">
+        <div class="editor-lines" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24</div>
+        <pre class="editor-code"><span class="cm">// TypeScript — Iterative (explicit stack)</span>
+<span class="kw">function</span> <span class="fn">inorderIterative</span>(
+  root: <span class="type">TreeNode</span> | <span class="type">null</span>
+): <span class="type">number</span>[] {
+
+  <span class="kw">const</span> result:  <span class="type">number</span>[]    = [];
+  <span class="kw">const</span> stack:   <span class="type">TreeNode</span>[] = []; <span class="cm">// ← we manage this!</span>
+  <span class="kw">let</span>   current              = root;
+
+  <span class="kw">while</span> (current !== <span class="type">null</span> || stack.length > 0) {
+
+    <span class="cm">// push LEFT nodes until we hit null</span>
+    <span class="kw">while</span> (current !== <span class="type">null</span>) {
+      stack.<span class="fn">push</span>(current);
+      current = current.left;
+    }
+
+    current = stack.<span class="fn">pop</span>()!;        <span class="cm">// ← backtrack</span>
+    result.<span class="fn">push</span>(current.val);      <span class="cm">// ← visit node</span>
+    current = current.right;        <span class="cm">// ← go RIGHT</span>
+  }
+
+  <span class="kw">return</span> result;
+}
+</pre>
+      </div>
+    </div>
+
+    <div class="complexity">
+      <div class="cx-box"><div class="cx-val">O(n)</div><div class="cx-label">Time</div></div>
+      <div class="cx-box"><div class="cx-val">O(h)</div><div class="cx-label">Space (explicit stack)</div></div>
+      <div class="cx-box" style="border-color:var(--ok)"><div class="cx-val" style="color:var(--ok)">✓ Safe</div><div class="cx-label">no stack overflow</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BFS SECTION -->
+<div class="bfs-section">
+
+  <div class="bfs-header">
+    <div>
+      <div class="bfs-eyebrow">// breadth first search</div>
+      <h2 class="bfs-title">BFS <em>Level Order</em> Traversal</h2>
+      <p class="bfs-desc">Unlike DFS which goes <strong>deep</strong> before wide, BFS visits every node level by level — left to right. Uses a <strong>queue</strong> (FIFO) instead of a stack (FILO).</p>
+    </div>
+    <div class="bfs-contrast">
+      <div class="contrast-row">
+        <span class="contrast-label">DFS Inorder</span>
+        <span class="contrast-val" id="dfsCompare">—</span>
+      </div>
+      <div class="contrast-divider"></div>
+      <div class="contrast-row">
+        <span class="contrast-label">BFS Level Order</span>
+        <span class="contrast-val accent-bfs" id="bfsCompare">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BFS concept bar -->
+  <div class="bfs-concept-bar">
+    <div class="concept-card">
+      <div class="concept-icon">⬇</div>
+      <div>
+        <div class="concept-name">DFS Stack</div>
+        <div class="concept-detail">LIFO — goes deep before wide</div>
+      </div>
+    </div>
+    <div class="concept-vs">vs</div>
+    <div class="concept-card active-concept">
+      <div class="concept-icon">➡</div>
+      <div>
+        <div class="concept-name">BFS Queue</div>
+        <div class="concept-detail">FIFO — visits level by level</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bfs-body">
+
+    <!-- BFS RECURSIVE PANEL -->
+    <div class="panel bfs-panel">
+      <div class="panel-header">
+        <span class="panel-tag tag-bfs-rec">Recursive</span>
+        <span class="panel-title">Level-by-Level Recursion</span>
+        <span class="best-badge pick-no">avoid for BFS</span>
+      </div>
+
+      <div class="tree-wrap">
+        <canvas id="canvasBfsRec" height="220"></canvas>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="btnBfsRecPlay" onclick="playBfsRec()">▶ Play</button>
+        <button class="btn outline" onclick="resetBfsRec()">↺ Reset</button>
+        <button class="btn outline" onclick="stepBfsRec()">Step →</button>
+        <div class="speed-wrap">speed <input type="range" id="speedBfsRec" min="1" max="5" value="3"></div>
+      </div>
+
+      <!-- level bands -->
+      <div class="level-bands" id="levelBandsRec" style="margin:12px 0 8px"></div>
+
+      <div class="state-row">
+        <div class="state-box">
+          <div class="state-label">current level</div>
+          <div class="state-val" id="bfsRecLevel"><span style="color:var(--ink4)">—</span></div>
+        </div>
+        <div class="state-box">
+          <div class="state-label">call depth</div>
+          <div class="state-val" id="bfsRecDepth"><span style="color:var(--ink4)">—</span></div>
+        </div>
+      </div>
+
+      <div class="output-box" style="margin:10px 0">
+        <div class="output-label">// level order output</div>
+        <div class="output-vals" id="bfsRecOutput"></div>
+      </div>
+
+      <div class="code-editor">
+        <div class="editor-titlebar">
+          <div class="editor-dots"><span></span><span></span><span></span></div>
+          <div class="editor-filename">bfs-recursive.ts</div>
+          <div class="editor-lang">TypeScript</div>
+        </div>
+        <div class="editor-body">
+          <div class="editor-lines" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34</div>
+          <pre class="editor-code"><span class="cm">// TypeScript — BFS Recursive</span>
+<span class="cm">// helper: collect one level's nodes</span>
+<span class="kw">function</span> <span class="fn">collectLevel</span>(
+  nodes:  <span class="type">TreeNode</span>[],
+  result: <span class="type">number</span>[][],
+  depth:  <span class="type">number</span>
+): <span class="type">void</span> {
+
+  <span class="kw">if</span> (nodes.length === 0) <span class="kw">return</span>; <span class="cm">// base case</span>
+
+  <span class="cm">// visit all nodes on this level</span>
+  result[depth] = nodes.<span class="fn">map</span>(n => n.val);
+
+  <span class="cm">// gather ALL children for the next level</span>
+  <span class="kw">const</span> nextLevel: <span class="type">TreeNode</span>[] = [];
+  <span class="kw">for</span> (<span class="kw">const</span> node <span class="kw">of</span> nodes) {
+    <span class="kw">if</span> (node.left)  nextLevel.<span class="fn">push</span>(node.left);
+    <span class="kw">if</span> (node.right) nextLevel.<span class="fn">push</span>(node.right);
+  }
+
+  <span class="cm">// recurse with next level's nodes</span>
+  <span class="fn">collectLevel</span>(nextLevel, result, depth + 1);
+}
+
+<span class="kw">function</span> <span class="fn">levelOrderRecursive</span>(
+  root: <span class="type">TreeNode</span> | <span class="type">null</span>
+): <span class="type">number</span>[][] {
+
+  <span class="kw">if</span> (!root) <span class="kw">return</span> [];
+
+  <span class="kw">const</span> result: <span class="type">number</span>[][] = [];
+  <span class="fn">collectLevel</span>([root], result, 0);
+  <span class="kw">return</span> result;
+}
+</pre>
+        </div>
+      </div>
+
+      <div class="bfs-note">
+        <span class="note-icon">⚠</span>
+        <span>BFS is naturally iterative. The recursive version still passes <em>all nodes of a level</em> as an array — there's no single-node recursion like DFS. Stack overflow risk remains for very deep trees.</span>
+      </div>
+
+      <div class="complexity">
+        <div class="cx-box"><div class="cx-val">O(n)</div><div class="cx-label">Time</div></div>
+        <div class="cx-box"><div class="cx-val">O(w)</div><div class="cx-label">Space (level width)</div></div>
+        <div class="cx-box" style="border-color:var(--hot)"><div class="cx-val" style="color:var(--hot)">O(h)</div><div class="cx-label">call stack depth</div></div>
+      </div>
+    </div>
+
+    <!-- BFS ITERATIVE PANEL -->
+    <div class="panel bfs-panel">
+      <div class="panel-header">
+        <span class="panel-tag tag-bfs-iter">Iterative</span>
+        <span class="panel-title">Queue-Driven Approach</span>
+        <span class="best-badge pick-yes"><span class="badge-star">★</span> pick this for BFS</span>
+      </div>
+
+      <div class="tree-wrap">
+        <canvas id="canvasBfsIter" height="220"></canvas>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="btnBfsIterPlay" onclick="playBfsIter()">▶ Play</button>
+        <button class="btn outline" onclick="resetBfsIter()">↺ Reset</button>
+        <button class="btn outline" onclick="stepBfsIter()">Step →</button>
+        <div class="speed-wrap">speed <input type="range" id="speedBfsIter" min="1" max="5" value="3"></div>
+      </div>
+
+      <!-- level bands -->
+      <div class="level-bands" id="levelBandsIter" style="margin:12px 0 8px"></div>
+
+      <div class="state-row">
+        <div class="state-box">
+          <div class="state-label">queue [] <span style="font-size:9px;color:var(--ink4)">(FIFO)</span></div>
+          <div class="state-val" id="bfsIterQueue"><span style="color:var(--ink4)">—</span></div>
+        </div>
+        <div class="state-box">
+          <div class="state-label">current level</div>
+          <div class="state-val" id="bfsIterLevel"><span style="color:var(--ink4)">—</span></div>
+        </div>
+      </div>
+
+      <div class="output-box" style="margin:10px 0">
+        <div class="output-label">// level order output</div>
+        <div class="output-vals" id="bfsIterOutput"></div>
+      </div>
+
+      <div class="code-editor">
+        <div class="editor-titlebar">
+          <div class="editor-dots"><span></span><span></span><span></span></div>
+          <div class="editor-filename">bfs-iterative.ts</div>
+          <div class="editor-lang">TypeScript</div>
+        </div>
+        <div class="editor-body">
+          <div class="editor-lines" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30</div>
+          <pre class="editor-code"><span class="cm">// TypeScript — BFS Iterative (preferred)</span>
+<span class="kw">function</span> <span class="fn">levelOrderIterative</span>(
+  root: <span class="type">TreeNode</span> | <span class="type">null</span>
+): <span class="type">number</span>[][] {
+
+  <span class="kw">if</span> (!root) <span class="kw">return</span> [];
+
+  <span class="kw">const</span> result: <span class="type">number</span>[][] = [];
+  <span class="kw">const</span> queue:  <span class="type">TreeNode</span>[] = [root]; <span class="cm">// ← seed with root</span>
+
+  <span class="kw">while</span> (queue.length > 0) {
+
+    <span class="cm">// freeze level size BEFORE processing</span>
+    <span class="kw">const</span> levelSize = queue.length;
+    <span class="kw">const</span> level:    <span class="type">number</span>[] = [];
+
+    <span class="kw">for</span> (<span class="kw">let</span> i = 0; i &lt; levelSize; i++) {
+      <span class="kw">const</span> node = queue.<span class="fn">shift</span>()!; <span class="cm">// ← FIFO dequeue</span>
+      level.<span class="fn">push</span>(node.val);
+
+      <span class="kw">if</span> (node.left)  queue.<span class="fn">push</span>(node.left);
+      <span class="kw">if</span> (node.right) queue.<span class="fn">push</span>(node.right);
+    }
+
+    result.<span class="fn">push</span>(level);
+  }
+
+  <span class="kw">return</span> result;
+}
+</pre>
+        </div>
+      </div>
+
+      <!-- KEY INSIGHT CARDS -->
+      <div class="insight-grid">
+        <div class="insight-card">
+          <div class="insight-num">01</div>
+          <div class="insight-title">shift() not pop()</div>
+          <div class="insight-body"><code>shift()</code> = FIFO (queue front). <code>pop()</code> = LIFO (stack top). Using <code>pop()</code> here gives you DFS — the wrong algorithm entirely.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-num">02</div>
+          <div class="insight-title">Freeze levelSize</div>
+          <div class="insight-body">Capture <code>queue.length</code> before the inner loop. As you enqueue children, the queue grows — the snapshot tells you where the current level ends.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-num">03</div>
+          <div class="insight-title">Why iterative wins</div>
+          <div class="insight-body">BFS is inherently a queue algorithm. The iterative version is cleaner, safer (no call stack), and is the standard solution you'll see in interviews.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-num">04</div>
+          <div class="insight-title">Enqueue order matters</div>
+          <div class="insight-body">Always push <code>left</code> before <code>right</code>. This preserves left-to-right reading order within each level of the output.</div>
+        </div>
+      </div>
+
+      <div class="complexity" style="margin-top:4px">
+        <div class="cx-box"><div class="cx-val">O(n)</div><div class="cx-label">Time</div></div>
+        <div class="cx-box"><div class="cx-val">O(w)</div><div class="cx-label">Space (queue)</div></div>
+        <div class="cx-box" style="border-color:var(--ok)"><div class="cx-val" style="color:var(--ok)">✓ Best</div><div class="cx-label">preferred approach</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── TREE DEFINITIONS ───────────────────────────────────────────────
+const TREES = [
+  // 0: Balanced
+  {
+    val: 4, left: {
+      val: 2, left: { val: 1, left: null, right: null },
+      right: { val: 3, left: null, right: null }
+    },
+    right: {
+      val: 6, left: { val: 5, left: null, right: null },
+      right: { val: 7, left: null, right: null }
+    }
+  },
+  // 1: Skewed Left
+  {
+    val: 5, left: {
+      val: 4, left: {
+        val: 3, left: { val: 2, left: { val: 1, left: null, right: null }, right: null },
+        right: null
+      }, right: null
+    }, right: null
+  },
+  // 2: Skewed Right
+  {
+    val: 1, left: null, right: {
+      val: 2, left: null, right: {
+        val: 3, left: null, right: {
+          val: 4, left: null, right: { val: 5, left: null, right: null }
+        }
+      }
+    }
+  },
+  // 3: Complex
+  {
+    val: 8, left: {
+      val: 4, left: {
+        val: 2, left: { val: 1, left: null, right: null },
+        right: { val: 3, left: null, right: null }
+      },
+      right: { val: 6, left: { val: 5, left: null, right: null }, right: { val: 7, left: null, right: null } }
+    },
+    right: {
+      val: 12, left: { val: 10, left: { val: 9, left: null, right: null }, right: { val: 11, left: null, right: null } },
+      right: { val: 14, left: { val: 13, left: null, right: null }, right: { val: 15, left: null, right: null } }
+    }
+  }
+];
+
+let currentTreeIdx = 0;
+let tree = TREES[0];
+
+// ─── THEME-AWARE CANVAS COLORS ───────────────────────────────────────
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function canvasColors() {
+  return {
+    edge:       cssVar('--line2'),
+    nodeFill:   cssVar('--surface'),
+    nodeStroke: cssVar('--line2'),
+    nodeText:   cssVar('--ink3'),
+
+    visitFill:   cssVar('--ok-tint'),
+    visitStroke: cssVar('--ok'),
+    visitText:   cssVar('--ok'),
+
+    stackFill:   cssVar('--tint'),
+    stackStroke: cssVar('--tintb'),
+    stackText:   cssVar('--accent'),
+
+    queueFill:   cssVar('--warn-tint'),
+    queueStroke: cssVar('--warn'),
+    queueText:   cssVar('--warn'),
+
+    curFill:   cssVar('--hot-tint'),
+    curStroke: cssVar('--hot'),
+    curText:   cssVar('--hot'),
+  };
+}
+
+// ─── TREE LAYOUT ─────────────────────────────────────────────────────
+function layoutTree(node, x, y, spread, positions = new Map(), id = 'root') {
+  if (!node) return positions;
+  positions.set(id, { node, x, y });
+  layoutTree(node.left, x - spread, y + 55, spread * 0.5, positions, id + 'L');
+  layoutTree(node.right, x + spread, y + 55, spread * 0.5, positions, id + 'R');
+  return positions;
+}
+
+function drawTree(canvasId, highlightVal = null, visitedVals = [], stackVals = []) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = (canvas.offsetWidth || 500) * dpr;
+  canvas.height = 220 * dpr;
+  ctx.scale(dpr, dpr);
+  const W = canvas.offsetWidth || 500;
+  const c = canvasColors();
+
+  const positions = layoutTree(tree, W / 2, 30, W / 4);
+
+  // Draw edges first
+  ctx.strokeStyle = c.edge;
+  ctx.lineWidth = 1.5;
+  for (const [id, { node, x, y }] of positions) {
+    if (node.left) {
+      const child = positions.get(id + 'L');
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(child.x, child.y); ctx.stroke();
+    }
+    if (node.right) {
+      const child = positions.get(id + 'R');
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(child.x, child.y); ctx.stroke();
+    }
+  }
+
+  // Draw nodes
+  for (const [id, { node, x, y }] of positions) {
+    const isCurrent = node.val === highlightVal;
+    const isVisited = visitedVals.includes(node.val);
+    const isInStack = stackVals.includes(node.val);
+
+    let fill = c.nodeFill;
+    let stroke = c.nodeStroke;
+    let textColor = c.nodeText;
+    let r = 18;
+
+    if (isVisited) { fill = c.visitFill; stroke = c.visitStroke; textColor = c.visitText; }
+    if (isInStack) { fill = c.stackFill; stroke = c.stackStroke; textColor = c.stackText; }
+    if (isCurrent) { fill = c.curFill;   stroke = c.curStroke;   textColor = c.curText;   r = 22; }
+
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = isCurrent ? 2.5 : 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = textColor;
+    const fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+    ctx.font = `${isCurrent ? 'bold ' : '700 '}${r > 18 ? 13 : 12}px ${fontFamily}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(node.val, x, y);
+  }
+}
+
+// ─── RECURSIVE STEPS GENERATOR ───────────────────────────────────────
+function* recSteps(node, callDepth = 0) {
+  if (!node) return;
+  yield { type: 'call', val: node.val, depth: callDepth };
+  yield* recSteps(node.left, callDepth + 1);
+  yield { type: 'visit', val: node.val, depth: callDepth };
+  yield* recSteps(node.right, callDepth + 1);
+  yield { type: 'return', val: node.val, depth: callDepth };
+}
+
+// ─── ITERATIVE STEPS GENERATOR ───────────────────────────────────────
+function* iterSteps(root) {
+  const stack = [];
+  let current = root;
+  while (current !== null || stack.length > 0) {
+    while (current !== null) {
+      stack.push(current.val);
+      yield { type: 'push', current: current.val, stack: [...stack] };
+      current = current.left;
+    }
+    const top = stack.pop();
+    current = findNode(root, top);
+    yield { type: 'visit', current: top, stack: [...stack] };
+    current = current ? current.right : null;
+  }
+}
+
+function findNode(root, val) {
+  if (!root) return null;
+  if (root.val === val) return root;
+  return findNode(root.left, val) || findNode(root.right, val);
+}
+
+// ─── RECURSIVE STATE ──────────────────────────────────────────────────
+let recGen, recVisited = [], recCallStack = [], recCurrent = null, recTimer = null;
+
+function initRec() {
+  recGen = recSteps(tree);
+  recVisited = []; recCallStack = []; recCurrent = null;
+  drawTree('canvasRec');
+  document.getElementById('recOutput').innerHTML = '';
+  document.getElementById('recVisited').innerHTML = '';
+  document.getElementById('recCurrent').innerHTML = '<span style="color:var(--ink4)">—</span>';
+  document.getElementById('callStack').innerHTML = '';
+}
+
+function stepRec() {
+  if (!recGen) initRec();
+  const { value, done } = recGen.next();
+  if (done) { recCurrent = null; updateRecUI(); return false; }
+
+  if (value.type === 'call') {
+    recCurrent = value.val;
+    recCallStack.push({ val: value.val, depth: value.depth });
+  } else if (value.type === 'visit') {
+    recCurrent = value.val;
+    recVisited.push(value.val);
+  } else if (value.type === 'return') {
+    recCallStack = recCallStack.filter((_, i) => i < recCallStack.length - 1);
+    recCurrent = recCallStack.length ? recCallStack[recCallStack.length - 1].val : null;
+  }
+
+  updateRecUI();
+  return !done;
+}
+
+function updateRecUI() {
+  drawTree('canvasRec', recCurrent, recVisited, recCallStack.map(f => f.val));
+
+  document.getElementById('recCurrent').innerHTML =
+    recCurrent !== null ? `<span class="chip chip-current">${recCurrent}</span>` : '<span style="color:var(--ink4)">—</span>';
+
+  document.getElementById('recVisited').innerHTML =
+    recVisited.map(v => `<span class="chip chip-visited">${v}</span>`).join('');
+
+  const csEl = document.getElementById('callStack');
+  csEl.innerHTML = recCallStack.map((f, i) => {
+    const isTop = i === recCallStack.length - 1;
+    return `<div class="cs-frame ${isTop ? 'top' : ''}">
+      <span>inorder(${f.val})</span>
+      <span style="opacity:0.7">depth:${f.depth}</span>
+    </div>`;
+  }).join('');
+
+  const outEl = document.getElementById('recOutput');
+  outEl.innerHTML = recVisited.map((v, i) =>
+    (i > 0 ? '<span class="out-arrow">→</span>' : '') +
+    `<span class="out-num">${v}</span>`
+  ).join('');
+}
+
+function resetRec() {
+  clearInterval(recTimer); recTimer = null;
+  document.getElementById('btnRecPlay').textContent = '▶ Play';
+  initRec();
+}
+
+function playRec() {
+  if (recTimer) {
+    clearInterval(recTimer); recTimer = null;
+    document.getElementById('btnRecPlay').textContent = '▶ Play';
+    return;
+  }
+  if (!recGen) initRec();
+  document.getElementById('btnRecPlay').textContent = '⏸ Pause';
+  const speed = 6 - document.getElementById('speedRec').value;
+  recTimer = setInterval(() => {
+    const cont = stepRec();
+    if (!cont) {
+      clearInterval(recTimer); recTimer = null;
+      document.getElementById('btnRecPlay').textContent = '▶ Play';
+    }
+  }, speed * 200);
+}
+
+// ─── ITERATIVE STATE ──────────────────────────────────────────────────
+let iterGen, iterVisited = [], iterStack = [], iterCurrent = null, iterTimer = null;
+
+function initIter() {
+  iterGen = iterSteps(tree);
+  iterVisited = []; iterStack = []; iterCurrent = null;
+  drawTree('canvasIter');
+  document.getElementById('iterOutput').innerHTML = '';
+  document.getElementById('iterStack').innerHTML = '';
+  document.getElementById('iterCurrent').innerHTML = '<span style="color:var(--ink4)">—</span>';
+}
+
+function stepIter() {
+  if (!iterGen) initIter();
+  const { value, done } = iterGen.next();
+  if (done) { iterCurrent = null; updateIterUI(); return false; }
+
+  if (value.type === 'push') {
+    iterCurrent = value.current;
+    iterStack = value.stack;
+  } else if (value.type === 'visit') {
+    iterCurrent = value.current;
+    iterStack = value.stack;
+    iterVisited.push(value.current);
+  }
+
+  updateIterUI();
+  return !done;
+}
+
+function updateIterUI() {
+  drawTree('canvasIter', iterCurrent, iterVisited, iterStack);
+
+  document.getElementById('iterCurrent').innerHTML =
+    iterCurrent !== null ? `<span class="chip chip-current">${iterCurrent}</span>` : '<span style="color:var(--ink4)">—</span>';
+
+  document.getElementById('iterStack').innerHTML =
+    iterStack.length
+      ? iterStack.map(v => `<span class="chip chip-stack">${v}</span>`).join('')
+      : '<span style="color:var(--ink4)">empty</span>';
+
+  const outEl = document.getElementById('iterOutput');
+  outEl.innerHTML = iterVisited.map((v, i) =>
+    (i > 0 ? '<span class="out-arrow">→</span>' : '') +
+    `<span class="out-num">${v}</span>`
+  ).join('');
+}
+
+function resetIter() {
+  clearInterval(iterTimer); iterTimer = null;
+  document.getElementById('btnIterPlay').textContent = '▶ Play';
+  initIter();
+}
+
+function playIter() {
+  if (iterTimer) {
+    clearInterval(iterTimer); iterTimer = null;
+    document.getElementById('btnIterPlay').textContent = '▶ Play';
+    return;
+  }
+  if (!iterGen) initIter();
+  document.getElementById('btnIterPlay').textContent = '⏸ Pause';
+  const speed = 6 - document.getElementById('speedIter').value;
+  iterTimer = setInterval(() => {
+    const cont = stepIter();
+    if (!cont) {
+      clearInterval(iterTimer); iterTimer = null;
+      document.getElementById('btnIterPlay').textContent = '▶ Play';
+    }
+  }, speed * 200);
+}
+
+// ─── TREE SELECTION ───────────────────────────────────────────────────
+function selectTree(idx) {
+  currentTreeIdx = idx;
+  tree = TREES[idx];
+  document.querySelectorAll('.tree-btn').forEach((b, i) =>
+    b.classList.toggle('active', i === idx));
+  resetRec(); resetIter(); resetBfsRec(); resetBfsIter();
+}
+
+// ─── BFS SHARED HELPERS ───────────────────────────────────────────────
+function getLevels(root) {
+  if (!root) return [];
+  const levels = [];
+  const queue = [{ node: root, level: 0 }];
+  while (queue.length) {
+    const { node, level } = queue.shift();
+    if (!levels[level]) levels[level] = [];
+    levels[level].push(node.val);
+    if (node.left)  queue.push({ node: node.left,  level: level + 1 });
+    if (node.right) queue.push({ node: node.right, level: level + 1 });
+  }
+  return levels;
+}
+
+function renderCompare() {
+  const dfsRes = [];
+  function dfs(n) { if (!n) return; dfs(n.left); dfsRes.push(n.val); dfs(n.right); }
+  dfs(tree);
+  document.getElementById('dfsCompare').innerHTML =
+    dfsRes.map(v => `<span class="chip chip-visited">${v}</span>`).join('');
+  const bfsFlat = getLevels(tree).flat();
+  document.getElementById('bfsCompare').innerHTML =
+    bfsFlat.map(v => `<span class="chip chip-queue">${v}</span>`).join('');
+}
+
+function drawBfsCanvas(canvasId, highlightVal, visitedVals, queueVals) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width  = (canvas.offsetWidth  || 500) * dpr;
+  canvas.height = 220 * dpr;
+  ctx.scale(dpr, dpr);
+  const W = canvas.offsetWidth || 500;
+  const positions = layoutTree(tree, W / 2, 30, W / 4);
+  const c = canvasColors();
+
+  ctx.strokeStyle = c.edge; ctx.lineWidth = 1.5;
+  for (const [id, { node, x, y }] of positions) {
+    if (node.left)  { const ch = positions.get(id+'L'); ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(ch.x,ch.y); ctx.stroke(); }
+    if (node.right) { const ch = positions.get(id+'R'); ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(ch.x,ch.y); ctx.stroke(); }
+  }
+  for (const [, { node, x, y }] of positions) {
+    const isCur  = node.val === highlightVal;
+    const isDone = visitedVals.includes(node.val);
+    const inQ    = queueVals.includes(node.val);
+    let fill = c.nodeFill, stroke = c.nodeStroke, textColor = c.nodeText, r = 18;
+    if (isDone) { fill = c.visitFill; stroke = c.visitStroke; textColor = c.visitText; }
+    if (inQ)    { fill = c.queueFill; stroke = c.queueStroke; textColor = c.queueText; }
+    if (isCur)  { fill = c.curFill;   stroke = c.curStroke;   textColor = c.curText;   r = 22; }
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = fill; ctx.fill();
+    ctx.strokeStyle = stroke; ctx.lineWidth = isCur ? 2.5 : 1.5; ctx.stroke();
+    ctx.fillStyle = textColor;
+    const fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+    ctx.font = `${isCur ? 'bold ' : '700 '}${r > 18 ? 13 : 12}px ${fontFamily}`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(node.val, x, y);
+  }
+}
+
+function renderLevelBands(elId, visitedVals, currentVal) {
+  const levels = getLevels(tree);
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = levels.map((nodes, i) => {
+    const chips = nodes.map(v => {
+      const cls = visitedVals.includes(v) ? 'done' : v === currentVal ? 'active' : 'pending';
+      return `<span class="level-chip ${cls}">${v}</span>`;
+    }).join('');
+    return `<div class="level-band"><span class="level-label">L${i}</span><div class="level-nodes">${chips}</div></div>`;
+  }).join('');
+}
+
+function bfsOutHtml(visited) {
+  return visited.map((v, i) =>
+    (i > 0 ? '<span class="out-arrow">→</span>' : '') +
+    `<span class="out-num" style="color:var(--warn)">${v}</span>`
+  ).join('');
+}
+
+// ─── BFS RECURSIVE STEPS GENERATOR ───────────────────────────────────
+function* bfsRecSteps(root) {
+  if (!root) return;
+  let currentLevelNodes = [root];
+  let depth = 0;
+  while (currentLevelNodes.length > 0) {
+    const nextLevel = [];
+    for (const node of currentLevelNodes) {
+      if (node.left)  nextLevel.push(node.left);
+      if (node.right) nextLevel.push(node.right);
+      yield {
+        val: node.val,
+        depth,
+        levelNodes: currentLevelNodes.map(n => n.val),
+        nextQueue:  nextLevel.map(n => n.val),
+      };
+    }
+    currentLevelNodes = nextLevel;
+    depth++;
+  }
+}
+
+// ─── BFS RECURSIVE STATE ──────────────────────────────────────────────
+let bfsRecGen, bfsRecVisited = [], bfsRecQueue = [], bfsRecCurrent = null, bfsRecDepth = null, bfsRecTimer = null;
+
+function initBfsRec() {
+  bfsRecGen = bfsRecSteps(tree);
+  bfsRecVisited = []; bfsRecQueue = []; bfsRecCurrent = null; bfsRecDepth = null;
+  drawBfsCanvas('canvasBfsRec', null, [], []);
+  renderLevelBands('levelBandsRec', [], null);
+  renderCompare();
+  document.getElementById('bfsRecOutput').innerHTML = '';
+  document.getElementById('bfsRecLevel').innerHTML = '<span style="color:var(--ink4)">—</span>';
+  document.getElementById('bfsRecDepth').innerHTML = '<span style="color:var(--ink4)">—</span>';
+}
+
+function stepBfsRec() {
+  if (!bfsRecGen) initBfsRec();
+  const { value, done } = bfsRecGen.next();
+  if (done) { bfsRecCurrent = null; updateBfsRecUI(); return false; }
+  bfsRecCurrent = value.val;
+  bfsRecDepth   = value.depth;
+  bfsRecQueue   = value.nextQueue;
+  bfsRecVisited.push(value.val);
+  updateBfsRecUI();
+  return true;
+}
+
+function updateBfsRecUI() {
+  drawBfsCanvas('canvasBfsRec', bfsRecCurrent, bfsRecVisited, bfsRecQueue);
+  renderLevelBands('levelBandsRec', bfsRecVisited, bfsRecCurrent);
+  document.getElementById('bfsRecLevel').innerHTML = bfsRecDepth !== null
+    ? `<span class="chip chip-current">Level ${bfsRecDepth}</span>` : '<span style="color:var(--ink4)">—</span>';
+  document.getElementById('bfsRecDepth').innerHTML = bfsRecDepth !== null
+    ? `<span class="chip chip-queue">depth ${bfsRecDepth}</span>`
+    : '<span style="color:var(--ink4)">—</span>';
+  document.getElementById('bfsRecOutput').innerHTML = bfsOutHtml(bfsRecVisited);
+}
+
+function resetBfsRec() {
+  clearInterval(bfsRecTimer); bfsRecTimer = null;
+  document.getElementById('btnBfsRecPlay').textContent = '▶ Play';
+  initBfsRec();
+}
+
+function playBfsRec() {
+  if (bfsRecTimer) {
+    clearInterval(bfsRecTimer); bfsRecTimer = null;
+    document.getElementById('btnBfsRecPlay').textContent = '▶ Play';
+    return;
+  }
+  if (!bfsRecGen) initBfsRec();
+  document.getElementById('btnBfsRecPlay').textContent = '⏸ Pause';
+  const speed = 6 - document.getElementById('speedBfsRec').value;
+  bfsRecTimer = setInterval(() => {
+    const cont = stepBfsRec();
+    if (!cont) { clearInterval(bfsRecTimer); bfsRecTimer = null; document.getElementById('btnBfsRecPlay').textContent = '▶ Play'; }
+  }, speed * 200);
+}
+
+// ─── BFS ITERATIVE STEPS GENERATOR ────────────────────────────────────
+function* bfsIterSteps(root) {
+  if (!root) return;
+  const queue = [{ node: root, level: 0 }];
+  while (queue.length) {
+    const levelSize = queue.length;
+    for (let i = 0; i < levelSize; i++) {
+      const { node, level } = queue.shift();
+      if (node.left)  queue.push({ node: node.left,  level: level + 1 });
+      if (node.right) queue.push({ node: node.right, level: level + 1 });
+      yield { val: node.val, level, queueVals: queue.map(q => q.node.val) };
+    }
+  }
+}
+
+// ─── BFS ITERATIVE STATE ──────────────────────────────────────────────
+let bfsIterGen, bfsIterVisited = [], bfsIterQueue = [], bfsIterCurrent = null, bfsIterLevel = null, bfsIterTimer = null;
+
+function initBfsIter() {
+  bfsIterGen = bfsIterSteps(tree);
+  bfsIterVisited = []; bfsIterQueue = []; bfsIterCurrent = null; bfsIterLevel = null;
+  drawBfsCanvas('canvasBfsIter', null, [], []);
+  renderLevelBands('levelBandsIter', [], null);
+  renderCompare();
+  document.getElementById('bfsIterOutput').innerHTML = '';
+  document.getElementById('bfsIterQueue').innerHTML = '<span style="color:var(--ink4)">—</span>';
+  document.getElementById('bfsIterLevel').innerHTML = '<span style="color:var(--ink4)">—</span>';
+}
+
+function stepBfsIter() {
+  if (!bfsIterGen) initBfsIter();
+  const { value, done } = bfsIterGen.next();
+  if (done) { bfsIterCurrent = null; updateBfsIterUI(); return false; }
+  bfsIterCurrent = value.val;
+  bfsIterLevel   = value.level;
+  bfsIterQueue   = value.queueVals;
+  bfsIterVisited.push(value.val);
+  updateBfsIterUI();
+  return true;
+}
+
+function updateBfsIterUI() {
+  drawBfsCanvas('canvasBfsIter', bfsIterCurrent, bfsIterVisited, bfsIterQueue);
+  renderLevelBands('levelBandsIter', bfsIterVisited, bfsIterCurrent);
+  document.getElementById('bfsIterQueue').innerHTML = bfsIterQueue.length
+    ? bfsIterQueue.map(v => `<span class="chip chip-queue">${v}</span>`).join('')
+    : '<span style="color:var(--ink4)">empty</span>';
+  document.getElementById('bfsIterLevel').innerHTML = bfsIterLevel !== null
+    ? `<span class="chip chip-current">Level ${bfsIterLevel}</span>` : '<span style="color:var(--ink4)">—</span>';
+  document.getElementById('bfsIterOutput').innerHTML = bfsOutHtml(bfsIterVisited);
+}
+
+function resetBfsIter() {
+  clearInterval(bfsIterTimer); bfsIterTimer = null;
+  document.getElementById('btnBfsIterPlay').textContent = '▶ Play';
+  initBfsIter();
+}
+
+function playBfsIter() {
+  if (bfsIterTimer) {
+    clearInterval(bfsIterTimer); bfsIterTimer = null;
+    document.getElementById('btnBfsIterPlay').textContent = '▶ Play';
+    return;
+  }
+  if (!bfsIterGen) initBfsIter();
+  document.getElementById('btnBfsIterPlay').textContent = '⏸ Pause';
+  const speed = 6 - document.getElementById('speedBfsIter').value;
+  bfsIterTimer = setInterval(() => {
+    const cont = stepBfsIter();
+    if (!cont) { clearInterval(bfsIterTimer); bfsIterTimer = null; document.getElementById('btnBfsIterPlay').textContent = '▶ Play'; }
+  }, speed * 200);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  initRec();
+  initIter();
+  initBfsRec();
+  initBfsIter();
+});
+
+window.addEventListener('resize', () => {
+  drawTree('canvasRec',  recCurrent,  recVisited,  recCallStack.map(f => f.val));
+  drawTree('canvasIter', iterCurrent, iterVisited, iterStack);
+  drawBfsCanvas('canvasBfsRec',  bfsRecCurrent,  bfsRecVisited,  bfsRecQueue);
+  drawBfsCanvas('canvasBfsIter', bfsIterCurrent, bfsIterVisited, bfsIterQueue);
+});
+
+// ─── THEME SYNC (optional postMessage from parent) ────────────────────
+window.addEventListener('message', (event) => {
+  if (!event.data || typeof event.data !== 'object') return;
+  if (event.data.type === 'set-theme' && (event.data.theme === 'dark' || event.data.theme === 'light')) {
+    document.documentElement.setAttribute('data-theme', event.data.theme);
+    // Redraw canvases with new color tokens
+    drawTree('canvasRec',  recCurrent,  recVisited,  recCallStack.map(f => f.val));
+    drawTree('canvasIter', iterCurrent, iterVisited, iterStack);
+    drawBfsCanvas('canvasBfsRec',  bfsRecCurrent,  bfsRecVisited,  bfsRecQueue);
+    drawBfsCanvas('canvasBfsIter', bfsIterCurrent, bfsIterVisited, bfsIterQueue);
+  }
+});
+</script>
+</body>
+</html>

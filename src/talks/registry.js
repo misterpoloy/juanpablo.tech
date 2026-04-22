@@ -99,7 +99,6 @@ export const TALKS = [
     featureImage: "https://www.corporacionbi.com/gt/bancoindustrial/wp-content/uploads/2025/10/Final-AWS-Community-Day.webp",
     eventImages: [
       "/img/talks/IMG_7682.JPG",
-      "/img/talks/IMG_7683.HEIC",
       "/img/talks/IMG_7686.jpg",
     ],
 

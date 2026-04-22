@@ -26,6 +26,12 @@ html, body, #root {
   --accent:   #58a6ff;
   --tint:     #1f6feb33;
   --tintb:    #1f6feb;
+  --ok:       #3fb950;
+  --ok-tint:  rgba(63, 185, 80, 0.14);
+  --warn:     #d29922;
+  --warn-tint: rgba(210, 153, 34, 0.14);
+  --hot:      #f78166;
+  --hot-tint: rgba(247, 129, 102, 0.18);
 }
 
 [data-theme="light"] {
@@ -44,6 +50,12 @@ html, body, #root {
   --accent:   #0969da;
   --tint:     #ddf4ff;
   --tintb:    #0969da;
+  --ok:       #1a7f37;
+  --ok-tint:  rgba(45, 164, 78, 0.14);
+  --warn:     #9a6700;
+  --warn-tint: rgba(191, 135, 0, 0.16);
+  --hot:      #cf222e;
+  --hot-tint: rgba(207, 34, 46, 0.12);
 }
 
 body {
