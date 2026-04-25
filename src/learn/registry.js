@@ -33,7 +33,7 @@ export const LEARN_ENTRIES = [
     description:
       "Compact reference for core Kubernetes concepts: pods, deployments, services, ingress, configmaps, secrets, and common architecture patterns.",
     category: "Kubernetes",
-    file: "/guides/kubernetes-cheat-sheet.pdf",
+    file: "/guides/Kubernetes_Interview_Guide.pdf",
     tags: ["kubernetes", "devops", "reference"],
     date: "2026-04-21",
     topics: [
@@ -54,7 +54,7 @@ export const LEARN_ENTRIES = [
     description:
       "Fast reference for the kubectl commands you reach for most when inspecting, deploying, and debugging clusters in day-to-day operations.",
     category: "Kubernetes",
-    file: "/guides/kubectl-cheat-sheet.pdf",
+    file: "/guides/kubectl_cheatsheet.pdf",
     tags: ["kubectl", "kubernetes", "cli", "reference"],
     date: "2026-04-21",
     topics: [

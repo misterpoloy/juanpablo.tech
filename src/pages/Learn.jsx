@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { LEARN_ENTRIES } from "../learn/registry.js";
 import { useDocumentMeta } from "../hooks/useDocumentMeta.js";
@@ -8,6 +8,25 @@ const FILTERS = [
   { id: "interactive", label: "Interactive" },
   { id: "pdf", label: "PDFs" },
 ];
+
+function useMediaQuery(query) {
+  const getMatches = () => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia(query).matches;
+  };
+
+  const [matches, setMatches] = useState(getMatches);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const handleChange = (event) => setMatches(event.matches);
+    setMatches(media.matches);
+    media.addEventListener("change", handleChange);
+    return () => media.removeEventListener("change", handleChange);
+  }, [query]);
+
+  return matches;
+}
 
 function TypeBadge({ type }) {
   const isInteractive = type === "interactive";
@@ -60,13 +79,14 @@ function FilterChip({ active, label, onClick }) {
   );
 }
 
-function ActionButton({ entry }) {
+function ActionButton({ entry, fullWidth = false }) {
   const base = {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    minWidth: 132,
+    minWidth: fullWidth ? "100%" : 132,
+    width: fullWidth ? "100%" : "auto",
     padding: "9px 14px",
     borderRadius: 8,
     border: "1px solid var(--line2)",
@@ -98,15 +118,15 @@ function ActionButton({ entry }) {
   );
 }
 
-function EntryRow({ entry, index }) {
+function EntryRow({ entry, index, compact }) {
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 2fr) auto",
-        gap: 20,
-        alignItems: "center",
-        padding: "18px 22px",
+        gridTemplateColumns: compact ? "1fr" : "minmax(0, 1.4fr) minmax(0, 2fr) auto",
+        gap: compact ? 14 : 20,
+        alignItems: compact ? "start" : "center",
+        padding: compact ? "18px 16px" : "18px 22px",
         borderTop: index === 0 ? "none" : "1px solid var(--line)",
       }}
     >
@@ -117,25 +137,29 @@ function EntryRow({ entry, index }) {
             {entry.category}
           </span>
         </div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ink1)", lineHeight: 1.45 }}>
+        <div style={{ fontSize: compact ? 13 : 14, fontWeight: 700, color: "var(--ink1)", lineHeight: 1.45 }}>
           {entry.title}
         </div>
       </div>
 
       <div style={{ minWidth: 0 }}>
-        <p style={{ margin: 0, fontSize: 12, color: "var(--ink4)", lineHeight: 1.8 }}>
+        <p style={{ margin: 0, fontSize: 12, color: "var(--ink4)", lineHeight: 1.8, overflowWrap: "anywhere" }}>
           {entry.description}
         </p>
       </div>
 
-      <div style={{ justifySelf: "end" }}>
-        <ActionButton entry={entry} />
+      <div style={{ justifySelf: compact ? "stretch" : "end", width: compact ? "100%" : "auto" }}>
+        <ActionButton entry={entry} fullWidth={compact} />
       </div>
     </div>
   );
 }
 
 export default function Learn() {
+  const isMobile = useMediaQuery("(max-width: 700px)");
+  const isTablet = useMediaQuery("(max-width: 1024px)");
+  const isCompact = isTablet;
+
   useDocumentMeta({
     title: "Blog & Downloads | Juan Pablo Ortiz (@wildpasco)",
     description:
@@ -152,7 +176,7 @@ export default function Learn() {
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", fontFamily: "monospace", color: "var(--ink2)" }}>
-      <header style={{ borderBottom: "1px solid var(--line)", padding: "28px 40px 24px" }}>
+      <header style={{ borderBottom: "1px solid var(--line)", padding: isMobile ? "24px 18px 20px" : isTablet ? "28px 24px 24px" : "28px 40px 24px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
           <span style={{
             fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2,
@@ -160,7 +184,7 @@ export default function Learn() {
             padding: "3px 9px", borderRadius: 20,
           }}>Learn</span>
         </div>
-        <h1 style={{ fontSize: 25, fontWeight: 700, color: "var(--ink1)", margin: "0 0 6px" }}>
+        <h1 style={{ fontSize: isMobile ? 22 : 25, fontWeight: 700, color: "var(--ink1)", margin: "0 0 6px", lineHeight: 1.2 }}>
           Learn
         </h1>
         <p style={{ fontSize: 12, color: "var(--ink4)", margin: 0, maxWidth: 640, lineHeight: 1.8 }}>
@@ -181,7 +205,7 @@ export default function Learn() {
         </div>
       </header>
 
-      <section style={{ padding: "36px 40px 56px" }}>
+      <section style={{ padding: isMobile ? "20px 18px 28px" : isTablet ? "28px 24px 36px" : "36px 40px 56px" }}>
         <div style={{
           maxWidth: 1120,
           margin: "0 auto",
@@ -191,32 +215,34 @@ export default function Learn() {
           overflow: "hidden",
           boxShadow: "0 18px 40px rgba(0, 0, 0, 0.14)",
         }}>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 2fr) auto",
-            gap: 20,
-            padding: "16px 22px",
-            background: "linear-gradient(180deg, var(--surface2) 0%, var(--surface) 100%)",
-            borderBottom: "1px solid var(--line)",
-          }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--ink5)", textTransform: "uppercase", letterSpacing: 1.5 }}>
-              Resource
+          {!isCompact && (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 2fr) auto",
+              gap: 20,
+              padding: "16px 22px",
+              background: "linear-gradient(180deg, var(--surface2) 0%, var(--surface) 100%)",
+              borderBottom: "1px solid var(--line)",
+            }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "var(--ink5)", textTransform: "uppercase", letterSpacing: 1.5 }}>
+                Resource
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "var(--ink5)", textTransform: "uppercase", letterSpacing: 1.5 }}>
+                Description
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "var(--ink5)", textTransform: "uppercase", letterSpacing: 1.5, textAlign: "right" }}>
+                Action
+              </div>
             </div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--ink5)", textTransform: "uppercase", letterSpacing: 1.5 }}>
-              Description
-            </div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--ink5)", textTransform: "uppercase", letterSpacing: 1.5, textAlign: "right" }}>
-              Action
-            </div>
-          </div>
+          )}
 
           {entries.length === 0 ? (
-            <div style={{ padding: "28px 22px", fontSize: 12, color: "var(--ink4)" }}>
+            <div style={{ padding: isCompact ? "22px 16px" : "28px 22px", fontSize: 12, color: "var(--ink4)" }}>
               No entries match this filter yet.
             </div>
           ) : (
             entries.map((entry, index) => (
-              <EntryRow key={entry.id} entry={entry} index={index} />
+              <EntryRow key={entry.id} entry={entry} index={index} compact={isCompact} />
             ))
           )}
         </div>

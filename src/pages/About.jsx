@@ -586,6 +586,8 @@ export default function About() {
               </div>
             </section>
 
+            <FeaturedPressCard />
+
             <section
               aria-labelledby="about-history"
               style={{
@@ -615,8 +617,6 @@ export default function About() {
                 ))}
               </ol>
             </section>
-
-            <FeaturedPressCard />
           </div>
         </div>
       </article>

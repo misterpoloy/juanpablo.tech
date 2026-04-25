@@ -96,7 +96,7 @@ export const TALKS = [
     status: "Delivered",
     conferenceUrl: "https://www.corporacionbi.com/gt/bancoindustrial/evento/aws-community-day-guatemala/",
     externalLabel: "View event page",
-    featureImage: "https://www.corporacionbi.com/gt/bancoindustrial/wp-content/uploads/2025/10/Final-AWS-Community-Day.webp",
+    featureImage: "/img/talks/aws-community-day.png",
     eventImages: [
       "/img/talks/IMG_7682.JPG",
       "/img/talks/IMG_7686.jpg",
