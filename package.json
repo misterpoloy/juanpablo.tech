@@ -16,6 +16,7 @@
   "devDependencies": {
     "@prerenderer/renderer-puppeteer": "^1.2.4",
     "@prerenderer/rollup-plugin": "^0.3.12",
+    "@sparticuz/chromium": "^147.0.2",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^6.0.6"
   }

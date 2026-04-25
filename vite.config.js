@@ -29,17 +29,38 @@ const routes = [
   "/learn/kubectl-cheat-sheet",
 ];
 
-export default defineConfig({
+const isVercel = process.env.VERCEL === "1" || Boolean(process.env.VERCEL_ENV);
+
+async function getRendererOptions() {
+  const baseOptions = {
+    renderAfterDocumentEvent: "render-event",
+    maxConcurrentRoutes: 4,
+    timeout: 30000,
+  };
+
+  if (!isVercel) {
+    return baseOptions;
+  }
+
+  const { default: chromium } = await import("@sparticuz/chromium");
+
+  return {
+    ...baseOptions,
+    args: chromium.args,
+    launchOptions: {
+      executablePath: await chromium.executablePath(),
+      headless: "shell",
+    },
+  };
+}
+
+export default defineConfig(async () => ({
   plugins: [
     react(),
     prerender({
       routes,
       renderer: "@prerenderer/renderer-puppeteer",
-      rendererOptions: {
-        renderAfterDocumentEvent: "render-event",
-        maxConcurrentRoutes: 4,
-        timeout: 30000,
-      },
+      rendererOptions: await getRendererOptions(),
     }),
   ],
-});
+}));

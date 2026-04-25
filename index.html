@@ -83,13 +83,15 @@
     }
     </script>
 
-    <!-- Microsoft Clarity analytics -->
+    <!-- Microsoft Clarity analytics — skipped during JSDOM prerender (no elementFromPoint, no UA match) -->
     <script type="text/javascript">
-      (function(c,l,a,r,i,t,y){
-          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window, document, "clarity", "script", "whcfe4smot");
+      if (typeof document.elementFromPoint === "function" && !/jsdom/i.test(navigator.userAgent)) {
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "whcfe4smot");
+      }
     </script>
 
     <!-- Prevent flash of wrong theme before CSS loads -->
