@@ -1,29 +1,28 @@
+import BstInorder from "./artifacts/BstInorder.jsx";
+
 /**
- * Registry of Learn entries — interactive HTML artifacts and downloadable PDF guides.
+ * Registry of Learn entries: interactive React artifacts and downloadable PDF guides.
  *
  * Entry shape:
- *   id          unique slug used in URLs (html entries open /learn/:id)
- *   type        "html" | "pdf"
+ *   id          unique slug used in URLs (interactive entries open /learn/:id)
+ *   type        "interactive" | "pdf"
  *   title       card title
  *   description one- or two-line summary shown on the card and detail page
  *   category    short label shown as a tag (e.g. "Data Structures", "Kubernetes")
- *   file        path under /public — "/artifacts/*.html" for html, "/guides/*.pdf" for pdf
+ *   component   (interactive) React component rendered natively in the page
+ *   file        (pdf)         path under /public, e.g. "/guides/*.pdf"
  *   tags        optional list of keywords for future filtering
  *   date        optional publication date (YYYY-MM-DD)
- *
- * Files:
- *   HTML artifacts live in /public/artifacts/<id>.html
- *   PDF guides   live in /public/guides/<id>.pdf
  */
 export const LEARN_ENTRIES = [
   {
     id: "bst-inorder",
-    type: "html",
-    title: "Binary Search Tree — Inorder Traversal",
+    type: "interactive",
+    title: "Binary Search Tree: Inorder Traversal",
     description:
       "Interactive walkthrough of inorder traversal on a binary search tree, with step-by-step visualization of the recursion and call stack.",
     category: "Data Structures",
-    file: "/artifacts/bst-inorder.html",
+    component: BstInorder,
     tags: ["trees", "recursion", "algorithms", "interview"],
     date: "2026-04-21",
   },
@@ -37,6 +36,16 @@ export const LEARN_ENTRIES = [
     file: "/guides/kubernetes-cheat-sheet.pdf",
     tags: ["kubernetes", "devops", "reference"],
     date: "2026-04-21",
+    topics: [
+      "Pod lifecycle and resource requests/limits",
+      "Deployments, ReplicaSets, and rollout strategies",
+      "Services: ClusterIP, NodePort, and LoadBalancer",
+      "Ingress controllers and routing rules",
+      "ConfigMaps and Secrets management",
+      "Namespaces, RBAC, and access control basics",
+      "Persistent Volumes and storage classes",
+      "Common architecture patterns and gotchas",
+    ],
   },
   {
     id: "kubectl-cheat-sheet",
@@ -48,6 +57,16 @@ export const LEARN_ENTRIES = [
     file: "/guides/kubectl-cheat-sheet.pdf",
     tags: ["kubectl", "kubernetes", "cli", "reference"],
     date: "2026-04-21",
+    topics: [
+      "Cluster and context switching (get-contexts, use-context)",
+      "Inspecting resources: get, describe, explain",
+      "Logs, exec, and port-forwarding for debugging",
+      "Applying, patching, and deleting resources",
+      "Rolling restarts and deployment rollbacks",
+      "Scaling deployments and watching resource status",
+      "Working with namespaces across commands",
+      "Useful flags and output formats (-o wide, -o yaml, --watch)",
+    ],
   },
 ];
 

@@ -8,20 +8,20 @@ export const PROJECTS = [
     name: "Youtube Download Extension",
     tagline: "Download any YouTube video up to 1080p. Local bridge, no cloud, no subscription.",
     description:
-      "A Chrome extension + Python bridge that injects a native-feeling Download button into every YouTube watch page. Click it, and the video gets pulled directly to your disk via yt-dlp — no third-party server ever sees your request. Supports age-restricted and member-only videos through browser cookies, real-time progress tracking, dark mode, and a CLI for power users.",
+      "A Chrome extension + Python bridge that injects a native-feeling Download button into every YouTube watch page. Click it, and the video gets pulled directly to your disk via yt-dlp. No third-party server ever sees your request. Supports age-restricted and member-only videos through browser cookies, real-time progress tracking, dark mode, and a CLI for power users.",
     detail: [
-      "Chrome extension (TypeScript + React, MV3) injects a floating download panel into the YouTube page that matches YouTube's own UI — same colors, typography, and button shapes.",
+      "Chrome extension (TypeScript + React, MV3) injects a floating download panel into the YouTube page that matches YouTube's own UI, with the same colors, typography, and button shapes.",
       "Python HTTP bridge runs on localhost:8765, receives the video URL, queues the job, and streams yt-dlp progress back to the extension in real time.",
       "Supports age-restricted and member-only videos via exported browser cookies (Netscape format), with a CLI fallback that reads cookies directly from your Chrome profile.",
     ],
     sections: [
       {
         heading: "How it works",
-        body: "The extension's content script injects a Download button into every YouTube watch page. Clicking it sends the video URL to a lightweight Python HTTP server running locally at 127.0.0.1:8765. The server queues the job, kicks off yt-dlp (merging best video + best audio into MP4 via ffmpeg), and streams live progress back. The extension polls /jobs/{id} and renders a real-time progress bar — nothing ever leaves your machine.",
+        body: "The extension's content script injects a Download button into every YouTube watch page. Clicking it sends the video URL to a lightweight Python HTTP server running locally at 127.0.0.1:8765. The server queues the job, kicks off yt-dlp (merging best video + best audio into MP4 via ffmpeg), and streams live progress back. The extension polls /jobs/{id} and renders a real-time progress bar. Nothing ever leaves your machine.",
         bullets: [
-          "Content script injects a floating panel that reuses YouTube's own CSS variables — it looks like it belongs there.",
+          "Content script injects a floating panel that reuses YouTube's own CSS variables so it looks like it belongs there.",
           "Service worker proxies messages between the injected panel and the local bridge, keeping the extension permissions minimal.",
-          "Bridge exposes three endpoints: GET /health, POST /download, GET /jobs/{id} — simple enough to curl from the terminal.",
+          "Bridge exposes three endpoints: GET /health, POST /download, GET /jobs/{id}, simple enough to curl from the terminal.",
           "ffmpeg merges the best available video stream with the best audio stream into a single MP4 automatically.",
         ],
       },
@@ -29,19 +29,19 @@ export const PROJECTS = [
         heading: "Why local-first",
         body: "Every cloud-based YouTube downloader logs your IP, the video URL, and the timestamp on their server. YT Local routes all traffic through your own machine: the extension is a thin UI layer, and yt-dlp talks directly to YouTube's CDN from your IP. No relay, no quota, no account required.",
         bullets: [
-          "Zero telemetry — the extension and bridge have no analytics, no error reporting to a remote endpoint.",
+          "Zero telemetry: the extension and bridge have no analytics, no error reporting to a remote endpoint.",
           "Works with any video yt-dlp supports, including age-restricted, members-only, and unlisted videos via your own session cookies.",
           "CLI mode available for scripting and batch downloads without the browser.",
-          "MIT licensed — auditable end-to-end, no black boxes.",
+          "MIT licensed, auditable end-to-end, no black boxes.",
         ],
       },
       {
         heading: "Stack & architecture",
         body: "Built with TypeScript on the extension side and Python on the bridge side, keeping each layer in its strongest language:",
         bullets: [
-          "browser_extension/ — TypeScript + React (popup settings), Vite build, Chrome MV3 manifest.",
-          "youtube_downloader/bridge.py — ThreadingHTTPServer with a job queue; each download runs in its own thread.",
-          "youtube_downloader/cli.py — thin yt-dlp wrapper with --output-dir, --cookies, and multi-URL support.",
+          "browser_extension/: TypeScript + React (popup settings), Vite build, Chrome MV3 manifest.",
+          "youtube_downloader/bridge.py: ThreadingHTTPServer with a job queue; each download runs in its own thread.",
+          "youtube_downloader/cli.py: thin yt-dlp wrapper with --output-dir, --cookies, and multi-URL support.",
           "CI via GitHub Actions; Python linted with ruff, TypeScript with ESLint.",
         ],
       },
@@ -60,18 +60,18 @@ export const PROJECTS = [
   {
     id: "shadow-cursor",
     name: "ShadowCursor",
-    tagline: "Press a shortcut, speak your intent — ShadowCursor reads the page and guides you through it.",
+    tagline: "Press a shortcut, speak your intent. ShadowCursor reads the page and guides you through it.",
     description:
-      "ShadowCursor is an open-source Chrome extension that turns voice commands into guided browser automation. Press Cmd+Shift+K, speak your request, and the extension captures a screenshot, scrapes the visible DOM, and sends everything to Claude or OpenAI. The model either answers your question inline or proposes a supervised step-by-step action plan — animated ghost cursor included.",
+      "ShadowCursor is an open-source Chrome extension that turns voice commands into guided browser automation. Press Cmd+Shift+K, speak your request, and the extension captures a screenshot, scrapes the visible DOM, and sends everything to Claude or OpenAI. The model either answers your question inline or proposes a supervised step-by-step action plan with an animated ghost cursor.",
     detail: [
       "Voice capture with live transcript via MediaRecorder + Web Speech API; stops automatically on silence or manually via keyboard.",
       "Multimodal context assembly: screenshot + DOM snapshot + page URL are bundled into a single LLM prompt for accurate, page-aware responses.",
-      "Confirmation-first execution — every action step requires user approval before the ghost cursor moves, so nothing runs without your sign-off.",
+      "Confirmation-first execution: every action step requires user approval before the ghost cursor moves, so nothing runs without your sign-off.",
     ],
     sections: [
       {
         heading: "Runtime flow",
-        body: "The full pipeline from keypress to executed action runs entirely inside your browser — no relay server, no persistent cloud session:",
+        body: "The full pipeline from keypress to executed action runs entirely inside your browser, with no relay server and no persistent cloud session:",
         bullets: [
           "Cmd+Shift+K (macOS) or Ctrl+Shift+K triggers voice capture; a recording indicator appears in-page.",
           "On capture end, the content script bundles raw audio, transcript, DOM snapshot, and page metadata and hands it to the background service worker.",
@@ -83,15 +83,15 @@ export const PROJECTS = [
         heading: "Stack & architecture",
         body: "Built entirely in TypeScript with Webpack, structured around Chrome's Manifest V3 service worker model:",
         bullets: [
-          "background/ — service-worker.ts orchestrates screenshots, STT resolution, and LLM routing; llm-router.ts supports Anthropic and OpenAI with user-supplied BYOK keys.",
-          "content/ — trigger.ts, voice-capture.ts, dom-scraper.ts, action-executor.ts, and shadow-cursor.ts each own a single responsibility; they communicate via typed chrome.runtime messages.",
-          "shared/ — types.ts, constants.ts, storage.ts, and messaging.ts provide a strict contract between background and content layers.",
+          "background/: service-worker.ts orchestrates screenshots, STT resolution, and LLM routing; llm-router.ts supports Anthropic and OpenAI with user-supplied BYOK keys.",
+          "content/: trigger.ts, voice-capture.ts, dom-scraper.ts, action-executor.ts, and shadow-cursor.ts each own a single responsibility; they communicate via typed chrome.runtime messages.",
+          "shared/: types.ts, constants.ts, storage.ts, and messaging.ts provide a strict contract between background and content layers.",
           "Options page lets users configure LLM provider, API keys, STT provider, auto-execute preference, and destructive-action confirmation.",
         ],
       },
       {
         heading: "Security & privacy",
-        body: "ShadowCursor handles sensitive page context — screenshots and DOM snapshots may contain personal data. The project ships with explicit guidance:",
+        body: "ShadowCursor handles sensitive page context; screenshots and DOM snapshots may contain personal data. The project ships with explicit guidance:",
         bullets: [
           "API keys are stored in chrome.storage.sync, never in source control or .env files.",
           "No keys, screenshots, or session exports are committed to the repository.",

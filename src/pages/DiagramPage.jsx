@@ -9,7 +9,7 @@ export default function DiagramPage() {
   const entry = getDiagram(slug);
   const [sourceOpen, setSourceOpen] = useState(false);
 
-  if (!entry) return <Navigate to="/" replace />;
+  if (!entry) return <Navigate to="/architecture" replace />;
 
   return (
     <div style={{

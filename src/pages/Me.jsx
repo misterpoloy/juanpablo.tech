@@ -1,3 +1,5 @@
+import { useDocumentMeta } from "../hooks/useDocumentMeta.js";
+
 const PROFILE_PHOTO = "/img/profile.jpg";
 
 const SOCIAL_LINKS = [
@@ -128,6 +130,13 @@ function SocialLink({ href, label, icon }) {
 }
 
 export default function Me() {
+  useDocumentMeta({
+    title: "@wildpasco | Juan Pablo Ortiz social links",
+    description:
+      "Social links for Juan Pablo Ortiz (@wildpasco): LinkedIn, GitHub, YouTube, TikTok, Twitch, and Instagram. Spanish-language content on AWS, cloud engineering, and Kubernetes.",
+    path: "/me",
+  });
+
   return (
     <main
       style={{
@@ -150,7 +159,7 @@ export default function Me() {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
           <img
             src={PROFILE_PHOTO}
-            alt="Juan Pablo Ortiz"
+            alt="Juan Pablo Ortiz (@wildpasco)"
             style={{
               width: 92,
               height: 92,
@@ -160,9 +169,13 @@ export default function Me() {
               marginBottom: 16,
             }}
           />
-          <h1 style={{ fontSize: 28, color: "var(--ink1)", margin: 0, lineHeight: 1.1 }}>@wildpasco</h1>
+          <h1 style={{ fontSize: 26, color: "var(--ink1)", margin: 0, lineHeight: 1.15 }}>
+            Juan Pablo Ortiz
+          </h1>
+          <p style={{ fontSize: 14, color: "var(--accent)", margin: "4px 0 0", fontWeight: 600 }}>@wildpasco</p>
           <p style={{ fontSize: 12, color: "var(--ink4)", margin: "8px 0 0", lineHeight: 1.7, maxWidth: 280 }}>
-            Software engineer building cloud systems, developer tools, and content around code, AWS, and performance.
+            Guatemalan software engineer based in Mexico City, building cloud systems, developer tools, and Spanish-language
+            content around code, AWS, and performance.
           </p>
         </div>
 

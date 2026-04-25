@@ -10,15 +10,15 @@ const COMPANY_LINK_STYLE = {
 const BIO = [
   (
     <>
-      Juan Pablo Ortiz is a Guatemalan software engineer, entrepreneur, and technical educator based in Mexico City.
-      He specializes in cloud architecture, DevOps, and Site Reliability Engineering, with a focus on scalable
-      distributed systems, platform infrastructure, and developer tooling.
+      Juan Pablo Ortiz, known online as{" "}
+      <strong style={{ color: "var(--ink2)" }}>@wildpasco</strong>, is a Guatemalan software engineer, entrepreneur,
+      and technical educator based in Mexico City. He specializes in cloud architecture, DevOps, and Site Reliability
+      Engineering, with a focus on scalable distributed systems, platform infrastructure, and developer tooling.
     </>
   ),
   (
     <>
-      Ortiz began programming at the age of{" "}
-      <strong style={{ color: "var(--ink2)" }}>16</strong> and is largely self-taught, later attending{" "}
+      Ortiz began programming at the age of 16 and is largely self-taught, later attending{" "}
       <strong style={{ color: "var(--ink2)" }}>Universidad Galileo</strong> in Guatemala before dropping out to
       pursue engineering work full-time. Over a career spanning{" "}
       <strong style={{ color: "var(--ink2)" }}>more than 10 years</strong>, he has held engineering positions at{" "}
@@ -39,8 +39,7 @@ const BIO = [
       </a>, and{" "}
       <a href="https://www.sofiasalud.com/" target="_blank" rel="noopener noreferrer" style={COMPANY_LINK_STYLE}>
         <strong style={{ color: "var(--ink2)" }}>Sofia Salud</strong>
-      </a>, where he was among the first{" "}
-      <strong style={{ color: "var(--ink2)" }}>three engineers</strong> on the team. His work has centered on AWS
+      </a>, where he was among the first three engineers on the team. His work has centered on AWS
       architecture, Kubernetes, CI/CD automation, observability, and backend modernization for systems operating at
       global scale.
     </>
@@ -67,6 +66,7 @@ const BIO = [
 
 const QUICK_FACTS = [
   ["Occupation", "Senior DevOps & SRE engineer"],
+  ["Also known as", "@wildpasco (YouTube, TikTok, Twitch, Instagram)"],
   ["Focus areas", "AWS infrastructure, CI/CD, observability, backend modernization"],
   ["Location", "Mexico City, Mexico"],
   ["Origin", "Guatemala"],
@@ -74,6 +74,15 @@ const QUICK_FACTS = [
   ["Known for", "Cloud reliability, AWS architecture, developer tooling, technical education"],
   ["Website", "juanpablo.tech"],
 ];
+
+const FEATURED_PRESS = {
+  source: "Forbes",
+  title: "The Avi App Gives Sight To The Blind And Was Built By A Teenager",
+  url: "https://www.forbes.com/sites/sethporges/2016/08/04/the-avi-app-gives-sight-to-the-blind-and-was-built-by-a-teenager/",
+  published: "August 4, 2016",
+  summary:
+    "A Forbes profile on AVI, the accessibility app Juan Pablo Ortiz co-developed to help blind and visually impaired users identify objects, read text, and better navigate everyday life.",
+};
 
 const JOB_HISTORY = [
   {
@@ -162,8 +171,9 @@ const JOB_HISTORY = [
   },
 ];
 
+const SEO_TITLE = "About Juan Pablo Ortiz (@wildpasco), Cloud Engineer";
 const SEO_DESCRIPTION =
-  "About Juan Pablo Ortiz, a Senior Software Engineer with experience in DevOps and SRE, focused on scalable cloud architecture, CI/CD platform engineering, observability, and software systems with impact across millions of users.";
+  "About Juan Pablo Ortiz, also known online as @wildpasco. Guatemalan Senior Software Engineer in Mexico City with 10+ years in DevOps, SRE, AWS cloud architecture, CI/CD, and observability. Thomson Reuters, Audible, Oracle, Angi, Sofia Salud.";
 
 function ensureMeta(selector, attributes) {
   let element = document.head.querySelector(selector);
@@ -193,7 +203,7 @@ function ensureLink(selector, attributes) {
 
 function useSeo() {
   useEffect(() => {
-    const title = "About Juan Pablo Ortiz | Software Engineer";
+    const title = SEO_TITLE;
     document.title = title;
 
     ensureMeta('meta[name="description"]', {
@@ -347,6 +357,70 @@ function TimelineItem({ role }) {
   );
 }
 
+function FeaturedPressCard() {
+  return (
+    <section
+      aria-labelledby="about-featured-press"
+      style={{
+        background: "linear-gradient(180deg, color-mix(in srgb, var(--surface) 90%, var(--tint) 10%), var(--surface))",
+        border: "1px solid color-mix(in srgb, var(--line) 78%, var(--accent) 22%)",
+        borderRadius: 16,
+        padding: "20px 22px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 12,
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ display: "grid", gap: 10, minWidth: 0 }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: 1.2,
+              textTransform: "uppercase",
+              color: "var(--accent)",
+            }}
+          >
+            Featured press
+          </p>
+          <SectionTitle>
+            <span id="about-featured-press">{FEATURED_PRESS.source}</span>
+          </SectionTitle>
+        </div>
+
+        <p style={{ margin: 0, fontSize: 11, color: "var(--ink4)" }}>{FEATURED_PRESS.published}</p>
+      </div>
+
+      <div style={{ display: "grid", gap: 10, marginTop: 14 }}>
+        <a
+          href={FEATURED_PRESS.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: "var(--ink1)",
+            fontSize: 15,
+            fontWeight: 700,
+            lineHeight: 1.5,
+            textDecorationColor: "var(--line2)",
+            textUnderlineOffset: "3px",
+          }}
+        >
+          {FEATURED_PRESS.title}
+        </a>
+
+        <p style={{ margin: 0, fontSize: 12, color: "var(--ink3)", lineHeight: 1.8 }}>{FEATURED_PRESS.summary}</p>
+      </div>
+    </section>
+  );
+}
+
 export default function About() {
   useSeo();
   const isWide = useMediaQuery("(min-width: 980px)");
@@ -425,7 +499,7 @@ export default function About() {
             }}
           >
             Senior Software Engineer with experience in DevOps and SRE, building scalable systems, mission-critical
-            services, and cloud platforms with <strong style={{ color: "var(--ink2)" }}>impact</strong> across millions
+            services, and cloud platforms with impact across millions
             of users.
           </p>
         </header>
@@ -541,6 +615,8 @@ export default function About() {
                 ))}
               </ol>
             </section>
+
+            <FeaturedPressCard />
           </div>
         </div>
       </article>

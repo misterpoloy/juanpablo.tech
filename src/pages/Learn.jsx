@@ -1,15 +1,16 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { LEARN_ENTRIES } from "../learn/registry.js";
+import { useDocumentMeta } from "../hooks/useDocumentMeta.js";
 
 const FILTERS = [
   { id: "all", label: "All" },
-  { id: "html", label: "Interactive" },
+  { id: "interactive", label: "Interactive" },
   { id: "pdf", label: "PDFs" },
 ];
 
 function TypeBadge({ type }) {
-  const isHtml = type === "html";
+  const isInteractive = type === "interactive";
   return (
     <span
       style={{
@@ -19,13 +20,13 @@ function TypeBadge({ type }) {
         textTransform: "uppercase",
         padding: "3px 8px",
         borderRadius: 999,
-        color: isHtml ? "var(--accent)" : "var(--ink3)",
-        background: isHtml ? "var(--tint)" : "var(--bg)",
-        border: `1px solid ${isHtml ? "var(--tintb)" : "var(--line)"}`,
+        color: isInteractive ? "var(--accent)" : "var(--ink3)",
+        background: isInteractive ? "var(--tint)" : "var(--bg)",
+        border: `1px solid ${isInteractive ? "var(--tintb)" : "var(--line)"}`,
         whiteSpace: "nowrap",
       }}
     >
-      {isHtml ? "Interactive" : "PDF"}
+      {isInteractive ? "Interactive" : "PDF"}
     </span>
   );
 }
@@ -90,18 +91,10 @@ function ActionButton({ entry }) {
     e.currentTarget.style.color = "var(--ink2)";
   };
 
-  if (entry.type === "html") {
-    return (
-      <Link to={`/learn/${entry.id}`} style={base} onMouseEnter={hoverIn} onMouseLeave={hoverOut}>
-        Open →
-      </Link>
-    );
-  }
-
   return (
-    <a href={entry.file} download style={base} onMouseEnter={hoverIn} onMouseLeave={hoverOut}>
-      Download PDF
-    </a>
+    <Link to={`/learn/${entry.id}`} style={base} onMouseEnter={hoverIn} onMouseLeave={hoverOut}>
+      {entry.type === "interactive" ? "Open →" : "View →"}
+    </Link>
   );
 }
 
@@ -143,6 +136,13 @@ function EntryRow({ entry, index }) {
 }
 
 export default function Learn() {
+  useDocumentMeta({
+    title: "Blog & Downloads | Juan Pablo Ortiz (@wildpasco)",
+    description:
+      "Technical learning resources, interactive explainers, and PDFs by Juan Pablo Ortiz (@wildpasco) on AWS, cloud architecture, and engineering topics.",
+    path: "/learn",
+  });
+
   const [filter, setFilter] = useState("all");
 
   const entries = useMemo(() => {

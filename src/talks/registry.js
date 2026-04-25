@@ -13,19 +13,19 @@ export const TALKS = [
     country: "Chile",
     city: "Santiago",
     flag: "🇨🇱",
-    color: "#F7DF1E",           // JavaScript yellow — distinct, recognizable
+    color: "#F7DF1E",           // JavaScript yellow, distinct and recognizable
     status: "Delivered",
     conferenceUrl: "https://jsconf.dev/charlistas/juan-pablo-ortiz/",
     externalLabel: "View on jsconf.dev",
     featureImage: "/img/talks/jsconf.JPG",
 
     abstract:
-      "JavaScript is often described as single-threaded, but that's only half the story. This session dives into web workers — the browser's built-in mechanism for true parallelism — and shows how to offload CPU-intensive work off the main thread without blocking the UI. We'll cover the fundamentals of concurrency vs. parallelism, walk through the JavaScript runtime model, and build real examples that demonstrate measurable performance gains.",
+      "JavaScript is often described as single-threaded, but that's only half the story. This session dives into web workers (the browser's built-in mechanism for true parallelism) and shows how to offload CPU-intensive work off the main thread without blocking the UI. We'll cover the fundamentals of concurrency vs. parallelism, walk through the JavaScript runtime model, and build real examples that demonstrate measurable performance gains.",
 
     topics: [
-      "JavaScript Runtime model — call stack, event loop, and task queue",
+      "JavaScript Runtime model: call stack, event loop, and task queue",
       "Concurrency vs. parallelism: what they mean in a browser context",
-      "Web Workers API — setup, communication, and lifecycle",
+      "Web Workers API: setup, communication, and lifecycle",
       "Shared memory with SharedArrayBuffer and Atomics",
       "Practical patterns: image processing, data parsing, and heavy computation off the main thread",
       "Pitfalls, debugging strategies, and browser support",

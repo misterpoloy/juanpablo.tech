@@ -22,6 +22,7 @@ export default function ContentCard({
         transition: "border-color 0.2s, box-shadow 0.2s",
         cursor: "pointer",
         height: "100%",
+        minWidth: 0,
       }}
       onMouseEnter={e => {
         e.currentTarget.style.borderColor = color + "55";
@@ -73,7 +74,7 @@ export default function ContentCard({
 
       <div style={{ padding: "16px 20px 20px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
         <header>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12, flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
               {icon && (
                 <span
@@ -94,18 +95,19 @@ export default function ContentCard({
                   {icon}
                 </span>
               )}
-              <h2
-                style={{
-                  fontSize: 17,
-                  fontWeight: 700,
-                  color: "var(--ink1)",
-                  margin: 0,
-                  fontFamily: "monospace",
-                }}
-              >
-                {title}
-              </h2>
-            </div>
+                <h2
+                  style={{
+                    fontSize: 17,
+                    fontWeight: 700,
+                    color: "var(--ink1)",
+                    margin: 0,
+                    fontFamily: "monospace",
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {title}
+                </h2>
+              </div>
             {badge}
           </div>
           {subtitle && (
@@ -116,6 +118,8 @@ export default function ContentCard({
                 margin: 0,
                 fontFamily: "monospace",
                 fontStyle: "italic",
+                lineHeight: 1.7,
+                overflowWrap: "anywhere",
               }}
             >
               {subtitle}
@@ -124,7 +128,7 @@ export default function ContentCard({
         </header>
 
         {description && (
-          <p style={{ fontSize: 12, color: "var(--ink4)", lineHeight: 1.8, margin: 0, fontFamily: "monospace" }}>
+          <p style={{ fontSize: 12, color: "var(--ink4)", lineHeight: 1.8, margin: 0, fontFamily: "monospace", overflowWrap: "anywhere" }}>
             {description}
           </p>
         )}

@@ -143,7 +143,7 @@ function RecursivePanel({ tree, themeTick }) {
           <div className="state-val">
             {current !== null
               ? <span className="chip chip-current">{current}</span>
-              : <span className="dim">—</span>}
+              : <span className="dim">-</span>}
           </div>
         </div>
         <div className="state-box">
@@ -171,7 +171,7 @@ function RecursivePanel({ tree, themeTick }) {
         lineCount={21}
         code={
           <>
-            <span className="cm">{"// TypeScript — Recursive"}</span>{"\n"}
+            <span className="cm">{"// TypeScript - Recursive"}</span>{"\n"}
             <span className="kw">interface</span> <span className="type">TreeNode</span> {"{"}{"\n"}
             {"  "}val:{"   "}<span className="type">number</span>;{"\n"}
             {"  "}left:{"  "}<span className="type">TreeNode</span> | <span className="type">null</span>;{"\n"}
@@ -299,7 +299,7 @@ function IterativePanel({ tree, themeTick }) {
           <div className="state-val">
             {current !== null
               ? <span className="chip chip-current">{current}</span>
-              : <span className="dim">—</span>}
+              : <span className="dim">-</span>}
           </div>
         </div>
       </div>
@@ -321,7 +321,7 @@ function IterativePanel({ tree, themeTick }) {
         lineCount={24}
         code={
           <>
-            <span className="cm">{"// TypeScript — Iterative (explicit stack)"}</span>{"\n"}
+            <span className="cm">{"// TypeScript - Iterative (explicit stack)"}</span>{"\n"}
             <span className="kw">function</span> <span className="fn">inorderIterative</span>({"\n"}
             {"  "}root: <span className="type">TreeNode</span> | <span className="type">null</span>{"\n"}
             ): <span className="type">number</span>[] {"{"}{"\n\n"}
@@ -465,7 +465,7 @@ function BfsRecursivePanel({ tree, themeTick }) {
           <div className="state-val">
             {depth !== null
               ? <span className="chip chip-current">Level {depth}</span>
-              : <span className="dim">—</span>}
+              : <span className="dim">-</span>}
           </div>
         </div>
         <div className="state-box">
@@ -473,7 +473,7 @@ function BfsRecursivePanel({ tree, themeTick }) {
           <div className="state-val">
             {depth !== null
               ? <span className="chip chip-queue">depth {depth}</span>
-              : <span className="dim">—</span>}
+              : <span className="dim">-</span>}
           </div>
         </div>
       </div>
@@ -495,7 +495,7 @@ function BfsRecursivePanel({ tree, themeTick }) {
         lineCount={34}
         code={
           <>
-            <span className="cm">{"// TypeScript — BFS Recursive"}</span>{"\n"}
+            <span className="cm">{"// TypeScript - BFS Recursive"}</span>{"\n"}
             <span className="cm">{"// helper: collect one level's nodes"}</span>{"\n"}
             <span className="kw">function</span> <span className="fn">collectLevel</span>({"\n"}
             {"  "}nodes:{"  "}<span className="type">TreeNode</span>[],{"\n"}
@@ -530,7 +530,7 @@ function BfsRecursivePanel({ tree, themeTick }) {
         <span className="note-icon">⚠</span>
         <span>
           BFS is naturally iterative. The recursive version still passes <em>all nodes of a level</em> as an
-          array — there's no single-node recursion like DFS. Stack overflow risk remains for very deep trees.
+          array; there's no single-node recursion like DFS. Stack overflow risk remains for very deep trees.
         </span>
       </div>
 
@@ -646,7 +646,7 @@ function BfsIterativePanel({ tree, themeTick }) {
           <div className="state-val">
             {level !== null
               ? <span className="chip chip-current">Level {level}</span>
-              : <span className="dim">—</span>}
+              : <span className="dim">-</span>}
           </div>
         </div>
       </div>
@@ -668,7 +668,7 @@ function BfsIterativePanel({ tree, themeTick }) {
         lineCount={30}
         code={
           <>
-            <span className="cm">{"// TypeScript — BFS Iterative (preferred)"}</span>{"\n"}
+            <span className="cm">{"// TypeScript - BFS Iterative (preferred)"}</span>{"\n"}
             <span className="kw">function</span> <span className="fn">levelOrderIterative</span>({"\n"}
             {"  "}root: <span className="type">TreeNode</span> | <span className="type">null</span>{"\n"}
             ): <span className="type">number</span>[][] {"{"}{"\n\n"}
@@ -699,15 +699,15 @@ function BfsIterativePanel({ tree, themeTick }) {
           <div className="insight-title">shift() not pop()</div>
           <div className="insight-body">
             <code>shift()</code> = FIFO (queue front). <code>pop()</code> = LIFO (stack top).
-            Using <code>pop()</code> here gives you DFS — the wrong algorithm entirely.
+            Using <code>pop()</code> here gives you DFS, the wrong algorithm entirely.
           </div>
         </div>
         <div className="insight-card">
           <div className="insight-num">02</div>
           <div className="insight-title">Freeze levelSize</div>
           <div className="insight-body">
-            Capture <code>queue.length</code> before the inner loop. As you enqueue children, the queue grows —
-            the snapshot tells you where the current level ends.
+            Capture <code>queue.length</code> before the inner loop. As you enqueue children, the queue grows.
+            The snapshot tells you where the current level ends.
           </div>
         </div>
         <div className="insight-card">
@@ -773,7 +773,7 @@ export default function BstInorder() {
       <div className="bst-header">
         <div>
           <h2>Inorder <em>DFS</em><br />Tree Traversal</h2>
-          <p>// recursive vs iterative — TypeScript implementation</p>
+          <p>// recursive vs iterative - TypeScript implementation</p>
         </div>
         <div className="tree-select-wrap">
           <div className="tree-select-label">Select Tree</div>
@@ -801,7 +801,7 @@ export default function BstInorder() {
           <div className="bfs-eyebrow">// breadth first search</div>
           <h2 className="bfs-title">BFS <em>Level Order</em> Traversal</h2>
           <p className="bfs-desc">
-            Unlike DFS which goes <strong>deep</strong> before wide, BFS visits every node level by level —
+            Unlike DFS which goes <strong>deep</strong> before wide, BFS visits every node level by level,
             left to right. Uses a <strong>queue</strong> (FIFO) instead of a stack (FILO).
           </p>
         </div>
@@ -827,7 +827,7 @@ export default function BstInorder() {
           <div className="concept-icon">⬇</div>
           <div>
             <div className="concept-name">DFS Stack</div>
-            <div className="concept-detail">LIFO — goes deep before wide</div>
+            <div className="concept-detail">LIFO, goes deep before wide</div>
           </div>
         </div>
         <div className="concept-vs">vs</div>
@@ -835,7 +835,7 @@ export default function BstInorder() {
           <div className="concept-icon">➡</div>
           <div>
             <div className="concept-name">BFS Queue</div>
-            <div className="concept-detail">FIFO — visits level by level</div>
+            <div className="concept-detail">FIFO, visits level by level</div>
           </div>
         </div>
       </div>

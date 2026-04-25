@@ -1,6 +1,6 @@
 /**
  * BST traversal algorithms, layout, and canvas painters.
- * Framework-agnostic — used by BstInorder.jsx.
+ * Framework-agnostic, used by BstInorder.jsx.
  */
 
 export const TREES = [

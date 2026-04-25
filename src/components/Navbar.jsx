@@ -5,12 +5,14 @@ import { useTheme } from "../hooks/useTheme.js";
 export const NAVBAR_HEIGHT = 56;
 
 const NAV_LINKS = [
-  { label: "Architecture Diagrams", to: "/" },
-  { label: "Projects", to: "/open-source" },
-  { label: "Learn", to: "/learn" },
-  { label: "Talks", to: "/talks" },
   { label: "About", to: "/about" },
+  { label: "Talks", to: "/talks" },
+  { label: "Projects", to: "/open-source" },
+  { label: "Architecture Diagrams", to: "/architecture" },
+  { label: "Blog & Downloads", to: "/learn" },
 ];
+
+const YOUTUBE_URL = "https://www.youtube.com/@wildpasco";
 
 function useMediaQuery(query) {
   const getMatches = () => {
@@ -67,6 +69,53 @@ function ThemeToggle({ theme, toggle }) {
     >
       {isDark ? "☀" : "☾"}
     </button>
+  );
+}
+
+function YouTubeIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M23.5 6.2a2.98 2.98 0 0 0-2.1-2.11C19.54 3.6 12 3.6 12 3.6s-7.54 0-9.4.49A2.98 2.98 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 2.98 2.98 0 0 0 2.1 2.11c1.86.49 9.4.49 9.4.49s7.54 0 9.4-.49a2.98 2.98 0 0 0 2.1-2.11A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8M9.6 15.6V8.4l6.25 3.6z" />
+    </svg>
+  );
+}
+
+function YouTubeLink() {
+  return (
+    <a
+      href={YOUTUBE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Open YouTube channel @wildpasco"
+      title="YouTube"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 32,
+        height: 32,
+        borderRadius: 8,
+        cursor: "pointer",
+        background: "var(--surface)",
+        border: "1px solid var(--line)",
+        color: "var(--ink3)",
+        transition: "background 0.15s, border-color 0.15s, color 0.15s",
+        flexShrink: 0,
+        textDecoration: "none",
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = "var(--line)";
+        e.currentTarget.style.borderColor = "var(--line2)";
+        e.currentTarget.style.color = "var(--ink1)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = "var(--surface)";
+        e.currentTarget.style.borderColor = "var(--line)";
+        e.currentTarget.style.color = "var(--ink3)";
+      }}
+    >
+      <YouTubeIcon />
+    </a>
   );
 }
 
@@ -262,13 +311,16 @@ export default function Navbar() {
           )}
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-          {!isMobile && (
-            <span style={{ fontSize: compactDesktop ? 12 : 13, color: "var(--ink4)" }}>
-              {compactDesktop ? "Theme" : "Toggle theme"}
-            </span>
-          )}
-          <ThemeToggle theme={theme} toggle={toggle} />
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 14, flexShrink: 0 }}>
+          <YouTubeLink />
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {!isMobile && (
+              <span style={{ fontSize: compactDesktop ? 12 : 13, color: "var(--ink4)" }}>
+                {compactDesktop ? "Theme" : "Toggle theme"}
+              </span>
+            )}
+            <ThemeToggle theme={theme} toggle={toggle} />
+          </div>
           {isMobile && <HamburgerButton open={mobileOpen} onClick={() => setMobileOpen(open => !open)} />}
         </div>
       </nav>

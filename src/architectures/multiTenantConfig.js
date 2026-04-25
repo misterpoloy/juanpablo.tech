@@ -21,7 +21,7 @@ export const ICON_MAP = {
 };
 
 export const ARCHITECTURE = {
-  title: "Multi-Tenant Config Service — AWS Architecture",
+  title: "Multi-Tenant Config Service: AWS Architecture",
   description: "ECS Fargate microservices · gRPC inter-service comms · DynamoDB/SSM strategy pattern · EventBridge-driven refresh",
   boundaries: [
     { id: "aws", label: "AWS Cloud", color: "#232F3E", x: 50, y: 15, w: 1360, h: 780, style: "solid" },
@@ -38,7 +38,7 @@ export const ARCHITECTURE = {
       detail: "A single Order Task is one running Fargate workload instance for the Order Service. It contains the REST controller and gRPC client behavior shown elsewhere in the diagram, and it scales horizontally as traffic grows. This level is useful because it explains where application code, retry policies, health checks, and per-task telemetry actually live at runtime." },
     { id: "config-svc", label: "Config Service (ECS Service)", color: "#D97706", x: 560, y: 195, w: 420, h: 330, style: "solid", group: "config", iconType: "aws", awsIcon: "ecs",
       detail: "The Config Service is the internal configuration domain exposed over gRPC. At the service level, ECS guarantees availability by keeping the desired count of config-serving tasks healthy and discoverable. This is the logical unit that encapsulates the strategy pattern for reading tenant configuration from DynamoDB or Parameter Store and hides those storage details from calling services." },
-    { id: "config-task", label: "Config Task (Fargate) — Registered with Cloud Map", color: "#FBBF24", x: 570, y: 225, w: 400, h: 280, style: "dashed", group: "config", iconType: "aws", awsIcon: "fargate",
+    { id: "config-task", label: "Config Task (Fargate), Registered with Cloud Map", color: "#FBBF24", x: 570, y: 225, w: 400, h: 280, style: "dashed", group: "config", iconType: "aws", awsIcon: "fargate",
       detail: "A Config Task is one concrete runtime instance of the Config Service. Each task exposes the gRPC server, is registered in Cloud Map for DNS-based discovery, and can be refreshed directly when EventBridge-driven config changes occur. This boundary matters because it is where request handling, cache refresh, service discovery registration, and per-task resiliency behavior come together." },
   ],
   nodes: [
