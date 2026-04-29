@@ -15,7 +15,7 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<Navigate to="/architecture" replace />} />
+        <Route path="/" element={<Navigate to="/about" replace />} />
         <Route path="/architecture" element={<Home />} />
         <Route path="/diagram/:slug" element={<DiagramPage />} />
         <Route path="/open-source" element={<OpenSource />} />

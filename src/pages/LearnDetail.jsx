@@ -36,7 +36,7 @@ function PdfLandingPage({ entry }) {
             onMouseEnter={e => (e.currentTarget.style.color = "var(--ink2)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--ink4)")}
           >
-            ← Back to Blog & Downloads
+            ← Back to Learn & Downloads
           </Link>
           <CategoryBadge category={entry.category} type={entry.type} />
           <h1 style={{ fontSize: 26, fontWeight: 700, color: "var(--ink1)", margin: "0 0 10px", lineHeight: 1.2 }}>
@@ -158,7 +158,7 @@ export default function LearnDetail() {
             onMouseEnter={e => (e.currentTarget.style.color = "var(--ink2)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--ink4)")}
           >
-            ← Back to Blog & Downloads
+            ← Back to Learn & Downloads
           </Link>
           <CategoryBadge category={entry.category} type={entry.type} />
           <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--ink1)", margin: "0 0 8px", lineHeight: 1.25 }}>

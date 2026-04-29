@@ -1,4 +1,5 @@
 import { ARCHITECTURE as multiTenantArch, ICON_MAP as multiTenantIcons } from "../architectures/multiTenantConfig.js";
+import { ARCHITECTURE as codexEcommerceArch, ICON_MAP as codexEcommerceIcons } from "../architectures/codexEcommerce.js";
 
 /**
  * Central registry for all architecture diagrams.
@@ -23,6 +24,27 @@ export const DIAGRAMS = [
     architecture: multiTenantArch,
     iconMap: multiTenantIcons,
     groupMeta: undefined,
+  },
+  {
+    slug: "codex-ecommerce",
+    title: "Codex-ecommerce",
+    cardSubtitle: "AWS Architecture Diagram",
+    description: "AAA tier-3 ecommerce on AWS · CloudFront/S3 frontend · ECS Fargate microservices · DynamoDB · multi-AZ",
+    tags: ["CloudFront", "ECS", "Fargate", "DynamoDB", "Multi-AZ"],
+    color: "#0F766E",
+    icon: "▦",
+    banner: "/img/diagrams/codex-ecommerce.png",
+    bannerAlt: "Codex ecommerce AWS architecture diagram preview",
+    architecture: codexEcommerceArch,
+    iconMap: codexEcommerceIcons,
+    groupMeta: {
+      frontend: { color: "#2563EB", label: "Frontend" },
+      backend: { color: "#ED7100", label: "Backend" },
+      data: { color: "#7C3AED", label: "Storage" },
+      async: { color: "#D97706", label: "Eventing" },
+      observability: { color: "#D97706", label: "Observability" },
+      cicd: { color: "#0F766E", label: "DevOps" },
+    },
   },
 ];
 

@@ -23,6 +23,88 @@ export const ICON_MAP = {
 export const ARCHITECTURE = {
   title: "Multi-Tenant Config Service: AWS Architecture",
   description: "ECS Fargate microservices · gRPC inter-service comms · DynamoDB/SSM strategy pattern · EventBridge-driven refresh",
+  flowGuides: {
+    requestFlow: [
+      {
+        step: 1,
+        title: "The client authenticates with Cognito",
+        explanation: "A user or application first signs in through Amazon Cognito. Cognito is the identity provider and issues the JWT tokens that the rest of the request path depends on.",
+        color: "#ED7100",
+      },
+      {
+        step: 2,
+        title: "Cognito returns the JWT tokens",
+        explanation: "After successful authentication, Cognito returns the ID and access tokens. The client then attaches the token to every API call that targets the order-facing service.",
+        color: "#ED7100",
+      },
+      {
+        step: 3,
+        title: "The client calls the API with REST plus JWT",
+        explanation: "The client sends the REST request together with the Cognito-issued JWT. That request enters the protected public edge of the platform before any private service is reached.",
+        color: "#ED7100",
+      },
+      {
+        step: 4,
+        title: "API Gateway validates the Cognito token",
+        explanation: "The request is checked by the Cognito authorizer on API Gateway. Only authenticated traffic is allowed to continue toward the private integration path into the VPC.",
+        color: "#ED7100",
+      },
+      {
+        step: 5,
+        title: "API Gateway uses VPC Link for private integration",
+        explanation: "API Gateway forwards the approved request through VPC Link V2. This keeps the application plane private while still exposing a controlled public API surface.",
+        color: "#ED7100",
+      },
+      {
+        step: 6,
+        title: "The internal ALB forwards traffic to the Order Service",
+        explanation: "The internal Application Load Balancer receives the private request and routes it to the Order Service target group. The Order Service is the external business API for this architecture.",
+        color: "#ED7100",
+      },
+      {
+        step: 7,
+        title: "The Order Service resolves the Config Service through Cloud Map",
+        explanation: "When tenant-aware configuration is needed, the Order Service uses the gRPC client to resolve the Config Service endpoint via Cloud Map DNS discovery.",
+        color: "#ED7100",
+      },
+      {
+        step: 8,
+        title: "The Order Service makes the gRPC call",
+        explanation: "After resolving the destination, the Order Service performs the gRPC request to the Config Service. This keeps configuration access internal, typed, and decoupled from the public REST surface.",
+        color: "#ED7100",
+      },
+      {
+        step: 9,
+        title: "The Config Service selects the right configuration strategy",
+        explanation: "Inside the Config Service, the strategy factory chooses the correct backend based on the key prefix. Requests are routed to DynamoDB or Parameter Store without exposing that storage choice to callers.",
+        color: "#ED7100",
+      },
+      {
+        step: 10,
+        title: "A Parameter Store change emits an EventBridge event",
+        explanation: "Outside the synchronous request path, a configuration change in Parameter Store generates an EventBridge event. This begins the refresh workflow that keeps live config-serving tasks current.",
+        color: "#D97706",
+      },
+      {
+        step: 11,
+        title: "EventBridge triggers the refresh Lambda",
+        explanation: "EventBridge invokes the Lambda function that owns the refresh process. This decouples config updates from the request path and turns them into an event-driven maintenance loop.",
+        color: "#D97706",
+      },
+      {
+        step: 12,
+        title: "Lambda discovers the active Config Service instances",
+        explanation: "The Lambda looks up currently registered Config Service tasks through Cloud Map. That lets it target the right runtime instances rather than relying on stale endpoints.",
+        color: "#D97706",
+      },
+      {
+        step: 13,
+        title: "Lambda directly asks each Config Service task to refresh",
+        explanation: "The Lambda issues the direct gRPC refresh call to the running Config Service tasks. This pushes updated configuration into the live serving layer without waiting for cache TTLs to expire.",
+        color: "#D97706",
+      },
+    ],
+  },
   boundaries: [
     { id: "aws", label: "AWS Cloud", color: "#232F3E", x: 50, y: 15, w: 1360, h: 780, style: "solid" },
     { id: "region", label: "Region (us-east-1)", color: "#147EBA", x: 70, y: 45, w: 1320, h: 740, style: "solid" },

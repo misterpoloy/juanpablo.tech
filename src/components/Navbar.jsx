@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: "Talks", to: "/talks" },
   { label: "Projects", to: "/open-source" },
   { label: "Architecture Diagrams", to: "/architecture" },
-  { label: "Blog & Downloads", to: "/learn" },
+  { label: "Learn & Downloads", to: "/learn" },
 ];
 
 const YOUTUBE_URL = "https://www.youtube.com/@wildpasco";

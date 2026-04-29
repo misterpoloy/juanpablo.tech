@@ -161,7 +161,7 @@ export default function Learn() {
   const isCompact = isTablet;
 
   useDocumentMeta({
-    title: "Blog & Downloads | Juan Pablo Ortiz (@wildpasco)",
+    title: "Learn & Downloads | Juan Pablo Ortiz (@wildpasco)",
     description:
       "Technical learning resources, interactive explainers, and PDFs by Juan Pablo Ortiz (@wildpasco) on AWS, cloud architecture, and engineering topics.",
     path: "/learn",

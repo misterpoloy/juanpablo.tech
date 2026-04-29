@@ -1,4 +1,6 @@
 import BstInorder from "./artifacts/BstInorder.jsx";
+import UrlShortener from "./artifacts/UrlShortener.jsx";
+import RedditApi from "./artifacts/RedditApi.jsx";
 
 /**
  * Registry of Learn entries: interactive React artifacts and downloadable PDF guides.
@@ -15,6 +17,28 @@ import BstInorder from "./artifacts/BstInorder.jsx";
  *   date        optional publication date (YYYY-MM-DD)
  */
 export const LEARN_ENTRIES = [
+  {
+    id: "reddit-api",
+    type: "interactive",
+    title: "Reddit API: System Design",
+    description:
+      "Interview-ready breakdown of the Reddit subreddit API — entity diagram with animated relationships, full CRUD for Posts, Comments, Votes & Awards, schema with key constraints, and 5 critical design decisions including why votes are separate entities.",
+    category: "System Design",
+    component: RedditApi,
+    tags: ["system design", "api design", "crud", "pagination", "interview", "reddit"],
+    date: "2026-04-28",
+  },
+  {
+    id: "url-shortener",
+    type: "interactive",
+    title: "URL Shortener: System Design",
+    description:
+      "Interview-ready breakdown of a URL shortening service at 10B requests/month — system diagram with live data flow, capacity estimates, REST API design, database schema, and 5 key architectural trade-offs.",
+    category: "System Design",
+    component: UrlShortener,
+    tags: ["system design", "redis", "postgresql", "caching", "interview", "distributed systems"],
+    date: "2026-04-27",
+  },
   {
     id: "bst-inorder",
     type: "interactive",
