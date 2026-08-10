@@ -23,7 +23,6 @@ const routes = [
   "/speaker/js-conf-2024",
   "/speaker/seattle-webdevcon",
   "/speaker/aws-community-day-guatemala-2024",
-  "/speaker/aws-community-day-guatemala-2025",
   // Learn detail pages
   "/learn/bst-inorder",
   "/learn/kubernetes-cheat-sheet",
