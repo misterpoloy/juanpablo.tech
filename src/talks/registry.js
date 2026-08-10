@@ -36,7 +36,7 @@ export const TALKS = [
       company: "",
       location: "Mexico City, Mexico",
       origin: "Guatemala",
-      bio: "Self-motivated engineer and lifelong learner with 7+ years of industry experience starting at age 16. Specializes in DevOps, CI/CD pipelines, cloud architecture, cost optimization, and high-performance systems. Based in Mexico City for the past 5 years, originally from Guatemala.",
+      bio: "10+ years of experience in the industry; worked in global tech operations, DevOps, and automation across the entire product development cycle. Self-motivated and a lifelong learner, involved in projects from startups to big companies. Specializes in DevOps (CI/CD), cloud architecture primarily on AWS, cost optimization, and high-scale performance systems.",
       social: {
         linkedin: "https://linkedin.com/in/juan-pablo-ortiz",
         instagram: "https://instagram.com/wildpasco",
@@ -74,7 +74,7 @@ export const TALKS = [
       company: "",
       location: "Mexico City, Mexico",
       origin: "Guatemala",
-      bio: "Self-motivated engineer and lifelong learner with 7+ years of industry experience starting at age 16. Specializes in DevOps, CI/CD pipelines, cloud architecture, cost optimization, and high-performance systems. Based in Mexico City for the past 5 years, originally from Guatemala.",
+      bio: "10+ years of experience in the industry; worked in global tech operations, DevOps, and automation across the entire product development cycle. Self-motivated and a lifelong learner, involved in projects from startups to big companies. Specializes in DevOps (CI/CD), cloud architecture primarily on AWS, cost optimization, and high-scale performance systems.",
       social: {
         linkedin: "https://linkedin.com/in/juan-pablo-ortiz",
         instagram: "https://instagram.com/wildpasco",
@@ -118,7 +118,7 @@ export const TALKS = [
       company: "",
       location: "Mexico City, Mexico",
       origin: "Guatemala",
-      bio: "Self-motivated engineer and lifelong learner with 7+ years of industry experience starting at age 16. Specializes in DevOps, CI/CD pipelines, cloud architecture, cost optimization, and high-performance systems. Based in Mexico City for the past 5 years, originally from Guatemala.",
+      bio: "10+ years of experience in the industry; worked in global tech operations, DevOps, and automation across the entire product development cycle. Self-motivated and a lifelong learner, involved in projects from startups to big companies. Specializes in DevOps (CI/CD), cloud architecture primarily on AWS, cost optimization, and high-scale performance systems.",
       social: {
         linkedin: "https://linkedin.com/in/juan-pablo-ortiz",
         instagram: "https://instagram.com/wildpasco",
